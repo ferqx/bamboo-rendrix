@@ -1,11 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -16,9 +10,9 @@
     "allowJs": true,
     "sourceMap": true,
     "resolveJsonModule": true,
+    "esModuleInterop": false,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
@@ -27,11 +21,12 @@
       "react",
       "vite/client"
     ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ],
-    },
+    "baseUrl": ".",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ]
   },
   "include": [
     "src",

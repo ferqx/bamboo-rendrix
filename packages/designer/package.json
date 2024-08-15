@@ -1,0 +1,19 @@
+{
+  "name": "@bamboo/designer",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "tsc -b && vite build --watch"
+  },
+  "dependencies": {
+    "@bamboo/material-library": "workspace:^",
+    "lucide-react": "^0.427.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.0",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}

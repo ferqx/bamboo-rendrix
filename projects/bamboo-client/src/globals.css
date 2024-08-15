@@ -1,4 +1,5 @@
 @import '@bamboo/material-library/dist/style.css';
+@import '@bamboo/designer/dist/style.css';
 
 @tailwind components;
 @tailwind utilities;

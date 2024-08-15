@@ -4,7 +4,7 @@ module.exports = {
   content: [
     './src/**/*.{ts,tsx}',
   ],
-  prefix: "bm-",
+  prefix: "",
   theme: {
     container: {
       center: true,
