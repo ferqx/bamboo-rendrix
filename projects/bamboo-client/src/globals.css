@@ -1,0 +1,4 @@
+@import '@bamboo/material-library/dist/style.css';
+
+@tailwind components;
+@tailwind utilities;
