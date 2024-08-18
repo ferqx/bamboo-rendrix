@@ -1,4 +1,4 @@
-import { TooltipProvider } from '@bamboo/material-library';
+import { TooltipProvider } from '@bamboo/components';
 import { Layout } from './layout';
 
 export function Designer() {

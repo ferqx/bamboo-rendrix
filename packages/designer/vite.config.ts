@@ -26,7 +26,7 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo/material-library': 'materialLibrary',
+          '@bamboo/components': 'materialLibrary',
         },
       },
     },

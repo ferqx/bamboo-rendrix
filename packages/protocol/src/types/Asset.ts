@@ -2,10 +2,11 @@ import { type MaterialSchema } from './Material';
 
 /**
  * 资源配置
- * 包含：js、css
+ * 包含：es、umd、css
  */
 export interface Manifest {
-  js: string;
+  es: string;
+  umd: string;
   css?: string;
 }
 

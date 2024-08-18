@@ -9,10 +9,14 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
-    "lucide-react": "^0.427.0",
+    "@bamboo/protocol": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^2.5.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
   }
 }

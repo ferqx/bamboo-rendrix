@@ -13,8 +13,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'materialLibrary',
-      fileName: (format) => `material-library.${format}.js`,
+      name: 'designer',
+      fileName: (format) => `designer.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
@@ -22,6 +22,7 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          '@bamboo/components': 'materialLibrary',
         },
       },
     },

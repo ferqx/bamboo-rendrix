@@ -1,4 +1,4 @@
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/material-library';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/components';
 import { Book, Bot, Code2, LifeBuoy, Settings2, Share, SquareTerminal, SquareUser, Triangle } from 'lucide-react';
 
 export function Layout() {
