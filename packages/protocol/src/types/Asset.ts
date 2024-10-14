@@ -12,6 +12,10 @@ export interface Manifest {
 
 export interface AssetSchema {
   /**
+   * 唯一标识 - 通常是库的英文名称
+   */
+  id: number | string;
+  /**
    * 中文名称
    */
   name: string;

@@ -2,17 +2,36 @@
   "name": "@bamboo/canvas",
   "version": "0.0.1",
   "type": "module",
-  "main": "./src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/bm-canvas.es.js",
+  "module": "./dist/bm-canvas.umd.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/bm-canvas.es.js",
+      "require": "./dist/bm-canvas.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "watch": "vite build --watch"
   },
   "dependencies": {
-    "lucide-react": "^0.427.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "classnames": "^2.5.1",
     "tailwind-merge": "^2.5.0",
     "tailwindcss-animate": "^1.0.7"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.427.0"
+  },
+  "devDependencies": {
+    "@bamboo/components": "workspace:^",
+    "@bamboo/protocol": "workspace:^",
+    "@bamboo/renderer": "workspace:^"
   }
 }

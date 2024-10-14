@@ -13,16 +13,16 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'designer',
-      fileName: (format) => `designer.${format}.js`,
+      name: 'bmRenderer',
+      fileName: (format) => `bm-renderer.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'uuid', /@bamboo\/*/],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo/components': 'materialLibrary',
+          '@bamboo/components': 'bambooComponents',
         },
       },
     },

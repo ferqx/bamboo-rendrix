@@ -1,2 +1,10 @@
 @tailwind components;
 @tailwind utilities;
+
+.xp-drag-item {
+  user-select: none !important;
+  cursor: pointer !important;
+  transition: none !important;
+  transition-property: none !important;
+  transition-duration: 0s !important;
+}

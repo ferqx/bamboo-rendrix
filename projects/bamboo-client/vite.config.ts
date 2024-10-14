@@ -8,9 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@bamboo/designer/dist/style.css': path.resolve(__dirname, '../../packages/designer/dist/style.css'),
+      '@bamboo/designer': path.resolve(__dirname, '../../packages/designer/src/dev.ts'),
+      '@bamboo/canvas': path.resolve(__dirname, '../../packages/canvas/src/index.ts'),
+      '@bamboo/renderer': path.resolve(__dirname, '../../packages/renderer/src/index.ts'),
     },
   },
-  // css: {
-  //   postcss: path.resolve(__dirname, '../../postcss.config.js'),
-  // },
 });

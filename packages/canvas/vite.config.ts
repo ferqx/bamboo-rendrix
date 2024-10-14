@@ -7,23 +7,24 @@ export default defineConfig({
   plugins: [react(), dts()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@bamboo/renderer': path.resolve(__dirname, '../renderer/src/index.ts'),
     },
   },
   build: {
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'designer',
-      fileName: (format) => `designer.${format}.js`,
+      name: 'bmCanvas',
+      fileName: (format) => `bm-canvas.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', /@bamboo\/*/],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo/components': 'materialLibrary',
         },
+        exports: 'named',
       },
     },
   },

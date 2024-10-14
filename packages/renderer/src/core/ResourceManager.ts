@@ -1,12 +1,32 @@
-import { Resource } from '../types/Resource';
+export type Resource = JSResource | CSSResource;
+export type ResourceType = 'js' | 'css';
+
+/**
+ * JS资源
+ */
+export interface JSResource {
+  type: 'js';
+  url: string;
+  load?: (ev: Event) => void;
+}
+
+/**
+ * CSS资源
+ */
+export interface CSSResource {
+  type: 'css';
+  url: string;
+}
 
 export class ResourceManager {
   /**
    * 已加载的资源 - url
    */
-  assets!: Record<string, boolean>;
+  private assets: Record<string, boolean> = {};
 
-  constructor() {}
+  isLoad(url: string) {
+    return this.assets[url];
+  }
 
   async fetchAsset(resource: Resource): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -15,7 +35,10 @@ export class ResourceManager {
       if (type === 'js') {
         element = document.createElement('script');
         element.src = url;
-        element.onload = () => resolve(true);
+        element.onload = (e) => {
+          resource.load?.(e);
+          resolve(true);
+        };
         element.onerror = () => reject(`Failed to load asset: ${url}`);
       } else if (type === 'css') {
         element = document.createElement('link');

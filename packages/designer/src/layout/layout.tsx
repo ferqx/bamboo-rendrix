@@ -1,7 +1,11 @@
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/components';
 import { Book, Bot, Code2, LifeBuoy, Settings2, Share, SquareTerminal, SquareUser, Triangle } from 'lucide-react';
 
-export function Layout() {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export function Layout(props: LayoutProps) {
   return (
     <div className="flex h-screen w-full">
       <aside className="z-20 flex h-full flex-col border-r">
@@ -93,7 +97,7 @@ export function Layout() {
             发布
           </Button>
         </header>
-        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3"></main>
+        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 relative bg-[#e5e5e5]">{props.children}</main>
       </div>
     </div>
   );

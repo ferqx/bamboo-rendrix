@@ -2,9 +2,22 @@ import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo/protocol
 import { RenderNode } from './RenderNode';
 import { RootRenderNode } from './RootRenderNode';
 import { ResourceManager } from './ResourceManager';
+import { ChangeType, NodeChangeEvent } from './NodeChange';
+import { DisposableStore, EventEmitter, IDisposable } from './event';
 
 export interface RendererOptions {
+  /**
+   * 组件结构
+   */
   schema: RenderSchema;
+  /**
+   * 节点数量限制
+   */
+  limit?: number;
+  /**
+   * 是否预览模式 - 预览模式下不允许拖拽
+   */
+  isPreview?: boolean;
   /**
    * 设计器模式下 - 资产是被动注入
    * 预览模式下 - 资产是主动注入，因为预览模式下渲染器与设计器脱离的结构关系
@@ -18,10 +31,14 @@ export interface RendererOptions {
 export class Renderer {
   rootNode: RootRenderNode;
 
+  get window() {
+    return window;
+  }
+
   /**
    * 资源管理
    */
-  resourceManager: ResourceManager;
+  readonly resourceManager: ResourceManager;
 
   /**
    * 资产数据
@@ -30,6 +47,42 @@ export class Renderer {
 
   public get assets(): AssetSchema[] {
     return this._assets;
+  }
+
+  private disposables = new DisposableStore();
+
+  private nodeChangeEmitter = new EventEmitter<NodeChangeEvent>();
+
+  private reloadChangeEmitter = new EventEmitter<void>();
+
+  /**
+   * 重新加载事件
+   */
+  onReloadChange(listener: () => void): IDisposable {
+    const disposable = this.reloadChangeEmitter.event(listener);
+    return this.disposables.add(disposable);
+  }
+
+  /**
+   * 节点变更事件
+   */
+  onNodeChange(listener: (e: NodeChangeEvent) => void): IDisposable {
+    const disposable = this.nodeChangeEmitter.event(listener);
+    return this.disposables.add(disposable);
+  }
+
+  /**
+   * 触发节点变更事件
+   */
+  triggerNodeChange(event: NodeChangeEvent): void {
+    this.nodeChangeEmitter.fire(event);
+  }
+
+  /**
+   * 触发重新加载变更事件
+   */
+  private triggerReloadChange(): void {
+    this.reloadChangeEmitter.fire();
   }
 
   public set assets(value: AssetSchema[]) {
@@ -47,11 +100,18 @@ export class Renderer {
    */
   materials: MaterialSchema[] = [];
 
-  constructor(options: RendererOptions) {
-    const { assets, schema } = options;
+  constructor(public options: RendererOptions) {
+    const { assets, schema, limit } = options;
+    this.assets = assets || [];
     this.resourceManager = new ResourceManager();
     this.rootNode = new RootRenderNode(schema, this);
-    this.assets = assets || [];
+    this.rootNode.childLimit = limit || Number.MAX_SAFE_INTEGER;
+  }
+
+  reload(schema: RenderSchema) {
+    this.rootNode = new RootRenderNode(schema, this);
+    this.rootNode.childLimit = this.options.limit || Number.MAX_SAFE_INTEGER;
+    this.triggerReloadChange();
   }
 
   /**
@@ -77,12 +137,12 @@ export class Renderer {
     while (queque.length > 0) {
       const curNode = queque.shift();
 
-      if (curNode?.id === id) {
+      if (String(curNode?.id || '') === String(id)) {
         return curNode;
       }
 
       curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode || child instanceof RootRenderNode) {
+        if (child instanceof RenderNode) {
           queque.push(child);
         }
       });
@@ -98,12 +158,14 @@ export class Renderer {
     while (queque.length > 0 && el) {
       const curNode = queque.shift();
 
-      if (RenderNode.getRenderNodeFromDom(el)) {
+      const id = el.getAttribute('data-id');
+
+      if (String(curNode?.id || '') === String(id)) {
         return curNode;
       }
 
       curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode || child instanceof RootRenderNode) {
+        if (child instanceof RenderNode) {
           queque.push(child);
         }
       });
@@ -116,20 +178,35 @@ export class Renderer {
    * @param targetNode 目标节点
    * @param pops  1 | 0 | -1, 1表示之前,-1表示之后,0 表示拖入到容器中
    */
-  moveNode(curNode: RenderNode, targetNode: RenderNode, pops: 1 | 0 | -1) {
+  moveNode(curNode: RenderNode, targetNode: RenderNode, pops: 1 | 0 | -1, isEmit = true) {
     if (curNode === targetNode || curNode.id === targetNode.id) {
       return;
     }
 
-    curNode.remove();
+    curNode.remove(false);
+
+    let newNode: RenderNode;
+
+    const oldParent = curNode.parent;
 
     switch (pops) {
       case 1:
-        return targetNode.insertBefore(curNode);
+        newNode = targetNode.insertBefore(curNode, false);
+        break;
       case 0:
-        return targetNode.appendChild(curNode);
+        newNode = targetNode.appendChild(curNode, false);
+        break;
       default:
-        return targetNode.insertAfter(curNode); // -1
+        newNode = targetNode.insertAfter(curNode, false);
+        break;
     }
+
+    isEmit && this.triggerNodeChange(new NodeChangeEvent(ChangeType.MOVE, newNode, newNode.parent, null, oldParent));
+
+    return newNode;
+  }
+
+  destroy() {
+    this.disposables.dispose();
   }
 }

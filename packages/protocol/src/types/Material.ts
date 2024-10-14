@@ -33,7 +33,7 @@ export interface MaterialSchema {
   /**
    * 禁用操作
    */
-  disableOperation?: ('delete' | 'move' | 'copy' | 'choice' | 'drag' | 'all')[];
+  disableOperation?: ('delete' | 'move' | 'copy' | 'choice' | 'all')[];
   /**
    * 片段
    * 该字段是用于当一个组件要展示多种形态时需要的一个设置功能，
@@ -50,6 +50,14 @@ export interface MaterialSchema {
      */
     schema: RenderSchema;
   }[];
+  /**
+   * 允许拖入到哪些父组件当中
+   */
+  allowToParents?: string[];
+  /**
+   * 允许拖入的子组件
+   */
+  allowChildren?: string[];
   /**
    * 子组件限制数
    */

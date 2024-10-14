@@ -1,10 +1,10 @@
+import { type ComponentType } from 'react';
 import { v1 as uuid } from 'uuid';
 import { type RenderSchema } from '@bamboo/protocol';
-
 import { RootRenderNode } from './RootRenderNode';
-import { RenderTextNode } from './RenderTextNode';
 import { Renderer } from './Renderer';
-import { ComponentType, ReactElement } from 'react';
+import { ChangeType, NodeChangeEvent, PropertyChange } from './NodeChange';
+import { RenderTextNode } from './RenderTextNode';
 
 /**
  * 渲染节点
@@ -18,15 +18,37 @@ export class RenderNode {
 
   componentName: string;
 
-  component!: ComponentType<Record<string, unknown>>;
-
-  props?: Record<string, unknown>;
+  props: Record<string, unknown>;
 
   parent?: RenderNode | RootRenderNode;
 
-  private updateCallback: (() => void) | null = null;
+  get el(): HTMLElement | null {
+    return window.document.querySelector(`[data-id="${this.id}"]`);
+  }
 
-  private static domToTreeNodeMap = new WeakMap<HTMLElement, RenderNode>(); // DOM 元素与 TreeNode 的映射
+  /**
+   * 是否是异步组件
+   */
+  get isAsyncComponent() {
+    return !!this.material?.manifest?.umd;
+  }
+
+  /**
+   * 远程组件是否注册
+   */
+  get isInstall() {
+    return (
+      this.material?.manifest &&
+      this.renderer?.resourceManager.isLoad(this.material.manifest.umd || this.material.manifest.es)
+    );
+  }
+
+  /**
+   * 资源信息
+   */
+  get manifest() {
+    return this.material?.manifest;
+  }
 
   /**
    * 允许选择
@@ -69,6 +91,33 @@ export class RenderNode {
     return !!this.material?.isContainer;
   }
 
+  private _childLimit = Number.MAX_SAFE_INTEGER;
+
+  /**
+   * 子组件数量限制
+   */
+  get childLimit() {
+    return this.material?.childLimit || this._childLimit;
+  }
+
+  set childLimit(value: number) {
+    this._childLimit = value;
+  }
+
+  /**
+   * 允许拖入到的父节点
+   */
+  get allowToParents() {
+    return this.material?.allowToParents;
+  }
+
+  /**
+   * 允许拖入的子节点
+   */
+  get allowChildren() {
+    return this.material?.allowChildren;
+  }
+
   /**
    * 组件的物料信息
    * 不建议直接读取该属性值用于判断操作，建议封装一个方法用于判断操作
@@ -83,7 +132,7 @@ export class RenderNode {
       if (parent.renderer) {
         return parent.renderer;
       }
-      parent = parent.parent!;
+      parent = parent.parent;
     }
   }
 
@@ -95,7 +144,7 @@ export class RenderNode {
   constructor(schema: RenderSchema | RenderNode, parent?: RenderNode) {
     this.id = schema.id || uuid();
     this.componentName = schema.componentName;
-    this.props = schema.props;
+    this.props = schema.props || {};
     this.children = (schema.children || []).map((item) => {
       if (typeof item === 'string') {
         return new RenderTextNode(item, this);
@@ -105,79 +154,122 @@ export class RenderNode {
     this.parent = parent;
   }
 
-  setUpdateCallback(callback: (() => void) | null): void {
-    this.updateCallback = callback;
-  }
-
   /**
-   * 新增组件
+   * 更新组件属性
    */
-  add(node: RenderNode | RenderSchema) {
-    if (node instanceof RenderNode) {
-      node.parent = this;
-    } else {
-      node = new RenderNode(node, this);
-    }
-    this.parent?.children.push(node);
+  setProps(props: Record<string, unknown>, isEmit = true) {
+    const propChanges: PropertyChange[] = [];
+    Object.entries(props).forEach(([key, value]) => {
+      propChanges.push({
+        key,
+        oldValue: this.props[key],
+        newValue: value,
+      });
+    });
+
+    Object.assign(this.props, props);
+
+    isEmit &&
+      this.renderer?.triggerNodeChange(
+        new NodeChangeEvent(ChangeType.PROP_CHANGE, this, null, null, null, propChanges),
+      );
   }
 
   /**
    * 替换当前节点
    */
-  replace(node: RenderNode | RenderSchema) {
+  replace(node: RenderNode | RenderSchema, isEmit = true): RenderNode {
+    let newNode: RenderNode;
+
     if (node instanceof RenderNode) {
-      node.parent = this;
+      newNode = node;
+      newNode.parent = this.parent;
     } else {
-      node = new RenderNode(node, this);
+      newNode = new RenderNode(node, this.parent);
     }
-    this.parent?.children.splice(this.index, 1, node);
+    this.parent?.children.splice(this.index, 1, newNode);
+
+    isEmit &&
+      this.renderer?.triggerNodeChange(
+        new NodeChangeEvent(ChangeType.REPLACE, newNode, newNode.parent, this, this.parent),
+      );
+
+    return newNode;
   }
 
   /**
    * 节点前插入一个节点
    */
-  insertBefore(node: RenderNode | RenderSchema) {
+  insertBefore(node: RenderNode | RenderSchema, isEmit = true): RenderNode {
+    let newNode: RenderNode;
+
     if (node instanceof RenderNode) {
-      node.parent = this.parent;
+      newNode = node;
+      newNode.parent = this.parent;
     } else {
-      node = new RenderNode(node, this.parent);
+      newNode = new RenderNode(node, this.parent);
     }
-    this.parent?.children.splice(this.index, 0, node);
-    return node;
+    this.parent!.children.splice(this.index, 0, newNode as RenderNode);
+
+    isEmit &&
+      this.renderer?.triggerNodeChange(new NodeChangeEvent(ChangeType.ADD, newNode, newNode.parent, null, null));
+
+    return newNode;
   }
 
   /**
    * 节点后插入一个节点
    */
-  insertAfter(node: RenderNode | RenderSchema) {
+  insertAfter(node: RenderNode | RenderSchema, isEmit = true): RenderNode {
+    let newNode: RenderNode;
+
     if (node instanceof RenderNode) {
       node.parent = this.parent;
+      newNode = node;
     } else {
-      node = new RenderNode(node, this.parent);
+      newNode = new RenderNode(node, this.parent);
     }
-    this.parent?.children.splice(this.index + 1, 0, node);
-    return node;
+    this.parent?.children.splice(this.index + 1, 0, newNode);
+
+    isEmit &&
+      this.renderer?.triggerNodeChange(new NodeChangeEvent(ChangeType.ADD, newNode, newNode.parent, null, null));
+
+    return newNode;
   }
 
   /**
    * 添加子节点
    */
-  appendChild(node: RenderNode | RenderSchema) {
+  appendChild(node: RenderNode | RenderSchema, isEmit = true): RenderNode {
+    let newNode: RenderNode;
+
     if (node instanceof RenderNode) {
-      node.parent = this;
+      newNode = node;
+      newNode.parent = this;
     } else {
-      node = new RenderNode(node, this);
+      newNode = new RenderNode(node, this);
     }
-    this.children.push(node);
-    return node;
+    this.children.push(newNode);
+    isEmit && this.renderer?.triggerNodeChange(new NodeChangeEvent(ChangeType.ADD, newNode, this, null, null));
+
+    return newNode;
   }
 
   /**
    * 删除组件
    */
-  remove() {
+  remove(isEmit = true) {
     if (this.parent) {
+      const hasNode = this.parent.children.includes(this);
+
+      // 检验逻辑正确性
+      if (!hasNode) {
+        console.warn('删除失败！该节点未在对应的父节点中,parent不正确,请检查程序!');
+        return;
+      }
+
       this.parent.children.splice(this.index, 1);
+      isEmit && this.renderer?.triggerNodeChange(new NodeChangeEvent(ChangeType.REMOVE, this, this.parent, null, null));
     }
   }
 
@@ -196,23 +288,5 @@ export class RenderNode {
         return item.toSchema();
       }),
     };
-  }
-
-  // 通知当前节点及其父节点更新
-  notifyUpdate(): void {
-    if (this.updateCallback) {
-      this.updateCallback();
-    }
-    if (this.parent) {
-      this.parent.notifyUpdate();
-    }
-  }
-
-  static mapDomToRenderNode(dom: HTMLElement, node: RenderNode): void {
-    RenderNode.domToTreeNodeMap.set(dom, node);
-  }
-
-  static getRenderNodeFromDom(dom: HTMLElement): RenderNode | undefined {
-    return RenderNode.domToTreeNodeMap.get(dom);
   }
 }

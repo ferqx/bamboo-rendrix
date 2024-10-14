@@ -1,0 +1,115 @@
+.bm-canvas {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 3px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.bm-canvas-container {
+  flex: 1;
+  min-height: 1px;
+}
+
+.bm-hover-tool {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  transform: translate(-9999px, -9999px);
+  border: 1px dashed rgba(0, 119, 255, 0.6);
+  pointer-events: none;
+  background-color: rgba(0, 119, 255, 0.05);
+  display: none;
+  z-index: 98;
+}
+
+.bm-dnd-placeholder {
+  position: absolute;
+  display: none;
+  z-index: 100;
+  transform: translate(-9999px, -9999px);
+  pointer-events: none;
+  background-color: rgba(0, 119, 255, 0.9);
+  border-radius: 4px;
+}
+
+.bm-selector-tool {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  z-index: 99;
+  transform: translate(-9999px, -9999px);
+  border: 2px solid rgba(0, 119, 255, 1);
+  pointer-events: none;
+}
+
+.bm-selector-header-popover,
+.bm-selector-footer-popover {
+  position: absolute;
+  display: flex;
+  user-select: none;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.bm-selector-header-popover {
+  &.bottom {
+    .bm-selector-actions {
+      border-radius: 0 0 3px 3px;
+    }
+  }
+
+  .bm-selector-actions {
+    border-radius: 3px 3px 0 0;
+    overflow: hidden;
+  }
+}
+
+.bm-selector-footer-popover {
+  &.top {
+    .bm-selector-actions {
+      border-radius: 3px 3px 0 0;
+    }
+  }
+
+  .bm-selector-actions {
+    border-radius: 0 0 3px 3px;
+    overflow: hidden;
+    margin-left: auto;
+  }
+}
+
+.bm-selector-actions {
+  display: flex;
+  background: rgb(0, 119, 255);
+
+  .bm-selector-action-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 24px;
+
+    color: #fff;
+    white-space: nowrap;
+    font-size: 14px;
+
+    cursor: pointer;
+    pointer-events: all;
+
+    &:hover {
+      background: darken(rgb(0, 119, 255), 10%);
+    }
+  }
+}
+
+iframe.bm-canvas-sandbox {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}

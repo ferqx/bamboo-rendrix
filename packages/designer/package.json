@@ -2,18 +2,30 @@
   "name": "@bamboo/designer",
   "version": "0.0.1",
   "type": "module",
-  "main": "./src/index.ts",
+  "files": ["dist"],
+  "main": "./dist/bm-designer.es.js",
+  "module": "./dist/bm-designer.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/bm-designer.es.js",
+      "require": "./dist/bm-designer.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "watch": "tsc -b && vite build --watch"
+    "watch": "vite build --watch"
   },
-  "dependencies": {
-    "@bamboo/components": "workspace:^",
+  "peerDependencies": {
     "lucide-react": "^0.427.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.5.0",
-    "tailwindcss-animate": "^1.0.7"
+    "uuid": "^10.0.0"
+  },
+  "dependencies": {
+    "@bamboo/canvas": "workspace:^",
+    "@bamboo/components": "workspace:^",
+    "@bamboo/protocol": "workspace:^",
+    "@bamboo/renderer": "workspace:^"
   }
 }

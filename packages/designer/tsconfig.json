@@ -25,7 +25,13 @@
     "paths": {
       "@/*": [
         "src/*"
-      ]
+      ],
+      "@bamboo/canvas": [
+        "../canvas/src/index.ts"
+      ],
+      "@bamboo/renderer": [
+        "../renderer/src/index.ts"
+      ],
     },
     "lib": [
       "esnext",
@@ -35,6 +41,6 @@
   },
   "include": [
     "src",
-    "*.d.ts"
+    "./env.d.ts",
   ]
 }

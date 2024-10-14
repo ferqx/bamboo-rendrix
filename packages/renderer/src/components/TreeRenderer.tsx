@@ -1,34 +1,104 @@
-import { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { RenderNode, RenderTextNode } from '../core';
+import { isFragmentComponent, transformStyle } from '../utils';
+import { DragWrappedComponentProps, withDrag } from './Drag';
+import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
+import { RendererContext } from './RendererProvider';
 
-type TreeRendererProps = {
-  renderNode: RenderNode | RenderTextNode;
+const componentMap: { [key: string]: React.ComponentType<any> } = {
+  div: (props: any) => <div {...props}>{props.children}</div>,
+  button: (props: any) => <button {...props}>{props.children}</button>,
 };
 
-function TreeRenderer<T>({ renderNode }: TreeRendererProps): ReactElement {
-  const [, setVersion] = useState(0); // 用于触发组件更新
+export interface MaterialComponentProps {
+  'data-id': string | number;
+  style: React.CSSProperties;
+  children?: React.ReactNode;
+}
 
-  if (renderNode instanceof RenderTextNode) {
-    return <>{renderNode.text}</>;
+const RenderDragComponent = ({ node }: { node: RenderNode }) => {
+  const DragComponent = withDrag((props: DragWrappedComponentProps) => (
+    <RenderComponent node={node} dragProps={props} />
+  ));
+  return <DragComponent data={node} dragType="move"></DragComponent>;
+};
+
+function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: DragWrappedComponentProps }) {
+  let Component = componentMap[node.componentName];
+
+  const style = node.props?.style || {};
+
+  const transformedStyle = style ? transformStyle(style || {}) : undefined;
+
+  const mergedProps = {
+    ...node.props,
+    [DRAG_ITEM_DATA_ID]: node.id,
+    className: DRAG_ITEM_CLASS_NAME,
+    style: transformedStyle,
+  };
+
+  if (!Component) {
+    // 未知组件不能移动
+    return <div {...mergedProps}>未知组件</div>;
   }
 
-  useEffect(() => {
-    // 设置更新回调，当 TreeNode 更新时触发组件重新渲染
-    renderNode.setUpdateCallback(() => setVersion((version) => version + 1));
-
-    // 清除回调
-    return () => renderNode.setUpdateCallback(null);
-  }, [renderNode]);
-
-  const Component = renderNode.component;
+  if (isFragmentComponent(<Component />)) {
+    const FragmentComponent = componentMap[node.componentName];
+    Component = (props: MaterialComponentProps) => (
+      <div {...props}>
+        <FragmentComponent {...node.props}>{props.children}</FragmentComponent>
+      </div>
+    );
+  }
 
   return (
-    <Component {...renderNode.props}>
-      {renderNode.children.map((child) => (
-        <TreeRenderer key={child.id} renderNode={child} />
-      ))}
+    <Component {...mergedProps} {...(dragProps || {})}>
+      <RenderChildComponents nodes={node.children} />
     </Component>
   );
 }
 
-export default TreeRenderer;
+const RenderChildComponents = ({ nodes }: { nodes: (RenderNode | RenderTextNode)[] }) => {
+  const options = useContext(RendererContext);
+
+  return (
+    <>
+      {nodes.map((item) => {
+        if (item instanceof RenderTextNode) {
+          return item.text;
+        }
+        return options?.isPreview ? (
+          <RenderComponent key={item.id} node={item} />
+        ) : (
+          <RenderDragComponent key={item.id} node={item} />
+        );
+      })}
+    </>
+  );
+};
+
+function RenderRootComponent({ node }: { node: RenderNode }) {
+  const [, setVersion] = useState(0); // 用于触发组件更新
+  // TODO: 后续尝试局部 change 的优化
+  useEffect(() => {
+    // 设置更新回调，当 TreeNode 更新时触发组件的DOM更新
+    const changeEvent = node.renderer?.onNodeChange(() => {
+      setVersion((version) => (version === Number.MAX_VALUE ? 0 : version + 1));
+    });
+    return () => changeEvent?.dispose();
+  }, []);
+
+  const props = {
+    [DRAG_ITEM_DATA_ID]: node.id,
+    className: 'renderer-root',
+    style: { height: '100%' } as React.CSSProperties,
+  };
+
+  return (
+    <div {...props}>
+      <RenderChildComponents nodes={node.children} />
+    </div>
+  );
+}
+
+export default RenderRootComponent;

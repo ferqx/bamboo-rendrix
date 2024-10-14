@@ -1,4 +1,4 @@
-import { type RenderSchema } from '@xplatform/data-protocol';
+import { type RenderSchema } from '@bamboo/protocol';
 import { RenderNode } from './RenderNode';
 import { Renderer } from './Renderer';
 
@@ -6,11 +6,6 @@ import { Renderer } from './Renderer';
  * 根节点
  */
 export class RootRenderNode extends RenderNode {
-  /**
-   * 生命周期
-   */
-  // lifecycle: {};
-
   /**
    * root节点children只能是RenderNode实例
    */
@@ -37,6 +32,8 @@ export class RootRenderNode extends RenderNode {
   get allowChoice(): boolean {
     return false;
   }
+
+  isRoot = true;
 
   constructor(schema: RenderSchema, renderer: Renderer) {
     super(schema);
