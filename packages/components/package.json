@@ -2,8 +2,19 @@
   "name": "@bamboo/components",
   "version": "0.0.1",
   "type": "module",
-  "main": "./dist/bamboo-components.es.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/bm-components.es.js",
+  "module": "./dist/bm-components.umd.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/bm-components.es.js",
+      "require": "./dist/bm-components.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

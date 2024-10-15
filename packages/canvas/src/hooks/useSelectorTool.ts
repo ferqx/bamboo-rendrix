@@ -66,9 +66,9 @@ export function useSelectorTool(options?: SelectorToolOptions) {
   let mutationObserver: MutationObserver;
 
   const setSelectorTool = (node: RenderNode) => {
-    if (node === state.selectedNode) {
-      return;
-    }
+    // if (node === state.selectedNode) {
+    //   return;
+    // }
 
     mutationObserver?.disconnect();
 

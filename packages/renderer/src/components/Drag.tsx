@@ -1,6 +1,6 @@
 import React from 'react';
 import { RenderSchema } from '@bamboo/protocol';
-import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
+import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME, DRAG_DATA } from '../constant';
 import { RenderNode } from '../core';
 
 export interface DragProps {
@@ -27,7 +27,11 @@ export const withDrag = (WrappedComponent: React.ComponentType<any>) => {
         e.preventDefault();
         return;
       }
-      const nodeSchema = JSON.stringify(new RenderNode(data).toSchema());
+      const nodeSchema = JSON.stringify(data instanceof RenderNode ? data.toSchema() : data);
+
+      // 挂载到全局对象上
+      window[DRAG_DATA] = nodeSchema;
+
       e.dataTransfer!.effectAllowed = dragType;
       e.dataTransfer?.setData('data', nodeSchema);
       // 设置预览图
@@ -35,8 +39,7 @@ export const withDrag = (WrappedComponent: React.ComponentType<any>) => {
         `.${DRAG_ITEM_CLASS_NAME}[${DRAG_ITEM_DATA_ID}="${data.id || data.componentName}"]`,
       ) as HTMLElement;
       snapshot && e.dataTransfer!.setDragImage(snapshot, -10, -10);
-      // 挂载到全局对象上
-      window.dragData = nodeSchema;
+
       e.stopPropagation();
     };
 

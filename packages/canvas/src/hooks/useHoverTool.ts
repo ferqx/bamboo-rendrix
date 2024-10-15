@@ -6,7 +6,6 @@ export interface HoverToolState {
   width: number;
   height: number;
   visible: boolean;
-  target?: HTMLElement;
 }
 
 /**
@@ -19,7 +18,6 @@ export function useHoverTool() {
     width: 0,
     height: 0,
     visible: false,
-    target: undefined,
   });
 
   const clearHoverTool = () => {
@@ -29,27 +27,24 @@ export function useHoverTool() {
   /**
    * 更新hover工具坐标
    */
-  const updateHoverTool = () => {
-    if (!state.target) {
+  const updateHoverTool = (target?: HTMLElement) => {
+    if (!target) {
       clearHoverTool();
       return;
     }
 
-    let { y, x, height, width } = state.target.getBoundingClientRect();
+    let { y, x, height, width } = target.getBoundingClientRect();
 
     const _x = x < 0 ? 0 : x;
 
-    const _y = y > state.target.ownerDocument.body.offsetWidth ? state.target.ownerDocument.body.offsetWidth : y;
+    const _y = y > target.ownerDocument.body.offsetWidth ? target.ownerDocument.body.offsetWidth : y;
 
     if (x < 0) {
       // 超出最左
       width = x < 0 ? width + x : width;
-    } else if (x + width > state.target.ownerDocument.body.offsetWidth) {
+    } else if (x + width > target.ownerDocument.body.offsetWidth) {
       // 超出最右
-      width =
-        x + width > state.target.ownerDocument.body.offsetWidth
-          ? state.target.ownerDocument.body.offsetWidth - x
-          : width;
+      width = x + width > target.ownerDocument.body.offsetWidth ? target.ownerDocument.body.offsetWidth - x : width;
     } else {
       width = width;
     }

@@ -13,8 +13,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'bambooComponents',
-      fileName: (format) => `bamboo-components.${format}.js`,
+      name: 'bmComponents',
+      fileName: (format) => `bm-components.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom'],

@@ -78,7 +78,7 @@ const RenderChildComponents = ({ nodes }: { nodes: (RenderNode | RenderTextNode)
 };
 
 function RenderRootComponent({ node }: { node: RenderNode }) {
-  const [, setVersion] = useState(0); // 用于触发组件更新
+  const [state, setVersion] = useState(0); // 用于触发组件更新
   // TODO: 后续尝试局部 change 的优化
   useEffect(() => {
     // 设置更新回调，当 TreeNode 更新时触发组件的DOM更新
@@ -87,6 +87,10 @@ function RenderRootComponent({ node }: { node: RenderNode }) {
     });
     return () => changeEvent?.dispose();
   }, []);
+
+  useEffect(() => {
+    console.log('更新了');
+  }, [state]);
 
   const props = {
     [DRAG_ITEM_DATA_ID]: node.id,

@@ -1,13 +1,14 @@
 /// <reference types="vite/client" />
 
-import type { Renderer } from '@bamboo/renderer';
+import type { Renderer, DRAG_DATA } from '@bamboo/renderer';
 
 declare module '*.svg';
 declare module '*.png';
 
 declare global {
   interface Window {
-    dragData: string;
-    renderer: Renderer;
+    vue: App;
+    Vue: Vue;
+    [DRAG_DATA]: string;
   }
 }

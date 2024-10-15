@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RenderSchema } from '@bamboo/protocol';
-import { ChangeType, RenderNode, Renderer, RootRenderNode } from '@bamboo/renderer';
+import { ChangeType, DRAG_DATA, RenderNode, Renderer, RootRenderNode } from '@bamboo/renderer';
 import { usePlaceholderTool } from './usePlaceholderTool';
 import { SelectorToolOptions, useSelectorTool } from './useSelectorTool';
 import { useHoverTool } from './useHoverTool';
@@ -21,7 +21,9 @@ export interface CanvasToolOptions extends SelectorToolOptions {
 export function useTool(options?: CanvasToolOptions) {
   let targetNode: RootRenderNode | RenderNode | undefined;
 
-  const [isDragIng, setIsDrag] = useState(false);
+  let _iframeWindow: Window;
+
+  let isDragIng = false;
 
   const placeholderTool = usePlaceholderTool();
 
@@ -30,11 +32,13 @@ export function useTool(options?: CanvasToolOptions) {
   const hoverTool = useHoverTool();
 
   const initEvent = (iframeWindow: Window, renderer: Renderer) => {
+    _iframeWindow = iframeWindow;
+
     // 监听节点移动
     iframeWindow.addEventListener('dragover', (e) => {
       e.preventDefault();
 
-      setIsDrag(true);
+      isDragIng = true;
 
       // 1. 找到当前拖拽的节点
       // 2. 找到目标节点-之前还是之后
@@ -43,27 +47,52 @@ export function useTool(options?: CanvasToolOptions) {
 
       if (!targetElement) {
         clearState();
+        console.log('targetElement is undefined');
         return;
       }
 
       targetNode = renderer.getNodeByElement(targetElement);
 
       if (!targetNode) {
+        console.log('targetNode is undefined');
         return;
       }
 
-      const dragData = JSON.parse(iframeWindow.dragData || '{}') as RenderSchema;
+      const isCopy = e.dataTransfer?.effectAllowed === 'copy';
 
-      const dragNode = dragData.id ? renderer.getNodeById(dragData.id) : undefined;
+      const json = isCopy ? window[DRAG_DATA] : iframeWindow[DRAG_DATA];
+
+      if (!json) {
+        return;
+      }
+
+      const dragData = JSON.parse(json) as RenderSchema;
+
+      const parentNode: RootRenderNode | RenderNode = targetNode.isContainer ? targetNode : targetNode.parent!;
+
+      const dragNode = isCopy ? new RenderNode(dragData, parentNode) : renderer.getNodeById(dragData.id!);
 
       const dragElement: HTMLElement | undefined = dragNode?.el as HTMLElement;
 
       const { x, y } = e;
 
+      // 判断节点是否可以拖入到目标节点之中
+      if (dragNode?.allowToParents?.length && !dragNode?.allowToParents.includes(parentNode.componentName)) {
+        e.dataTransfer!.dropEffect = 'none';
+        clearState();
+        return;
+      }
+
+      // 如果父节点存在子节点的数量限制
+      if (parentNode.children.length >= parentNode.childLimit) {
+        e.dataTransfer!.dropEffect = 'none';
+        clearState();
+        return;
+      }
+
       // 目标节点如果是容器
       if (targetNode?.isContainer && targetNode.children.length === 0) {
-        placeholderTool.state.pops = 0;
-        placeholderTool.clearPlaceholder();
+        placeholderTool.setTargetPlaceholder(targetElement, 'center');
         return;
       }
 
@@ -82,12 +111,14 @@ export function useTool(options?: CanvasToolOptions) {
 
       // 父组件schema 定义了子 schema 后，通常只允许添加该协议组件
       if (targetNode.parent?.material?.childSchema?.find((item) => item.componentName === targetNode?.componentName)) {
+        e.dataTransfer!.dropEffect = 'none';
         clearState();
         return;
       }
 
       // 如果目标节点是当前节点的子节点，不允许进行拖拽交互
       if (dragElement && isChildByElement(dragElement, targetElement)) {
+        e.dataTransfer!.dropEffect = 'none';
         clearState();
         return;
       }
@@ -109,7 +140,7 @@ export function useTool(options?: CanvasToolOptions) {
     iframeWindow.addEventListener('drop', (e) => {
       e.stopPropagation();
 
-      setIsDrag(false);
+      isDragIng = false;
 
       const dragData = e.dataTransfer?.getData('data');
 
@@ -124,8 +155,8 @@ export function useTool(options?: CanvasToolOptions) {
 
       const data: RenderSchema = JSON.parse(dragData);
 
-      // 获取未来的父节点
-      const parentNode = targetNode.isContainer ? targetNode : targetNode.parent!;
+      // 未来的父节点
+      const parentNode: RootRenderNode | RenderNode = targetNode.isContainer ? targetNode : targetNode.parent!;
 
       const dragNode =
         e.dataTransfer?.effectAllowed === 'move'
@@ -136,25 +167,21 @@ export function useTool(options?: CanvasToolOptions) {
         return;
       }
 
-      // 判断节点是否可以拖入到目标节点之中
-      if (dragNode?.allowToParents && !dragNode?.allowToParents.includes(parentNode.componentName)) {
-        clearState();
-        return;
-      }
-
       // 如果是move类型，表明拖拽中的节点是画布中的节点
       if (e.dataTransfer?.effectAllowed === 'move') {
-        renderer.moveNode(dragNode!, targetNode!, placeholderTool.state.pops);
+        console.log('placeholderTool.pops', placeholderTool.pops);
+        renderer.moveNode(dragNode!, targetNode!, placeholderTool.pops);
       } else if (e.dataTransfer?.effectAllowed === 'copy') {
         // 从外部拖入到画布中，插入新的节点
-        if (placeholderTool.state.pops === 1) {
+        if (placeholderTool.pops === 1) {
           targetNode?.insertBefore(dragNode);
-        } else if (placeholderTool.state.pops === -1) {
+        } else if (placeholderTool.pops === -1) {
           targetNode?.insertAfter(dragNode);
         } else {
           targetNode?.appendChild(dragNode);
         }
       }
+      clearDragData();
       placeholderTool.clearPlaceholder();
     });
     iframeWindow.addEventListener('dragenter', (e) => e.preventDefault());
@@ -190,7 +217,7 @@ export function useTool(options?: CanvasToolOptions) {
       if (selectorTool.state.selectedNode) {
         selectorTool.updateSelectorTool();
       }
-      if (hoverTool.state.target) {
+      if (hoverTool.state.visible) {
         hoverTool.clearHoverTool();
       }
     });
@@ -210,9 +237,7 @@ export function useTool(options?: CanvasToolOptions) {
             hoverTool.clearHoverTool();
             return;
           }
-
-          hoverTool.state.target = targetElement;
-          hoverTool.updateHoverTool();
+          hoverTool.updateHoverTool(targetElement);
         }
       });
     });
@@ -250,13 +275,22 @@ export function useTool(options?: CanvasToolOptions) {
    * 清空占位、hover状态
    */
   const clearState = () => {
-    setIsDrag(false);
     if (targetNode) {
       clearDragHoverStyle(targetNode);
     }
+    isDragIng = false;
     targetNode = undefined;
     placeholderTool.clearPlaceholder();
     hoverTool.clearHoverTool();
+  };
+
+  /**
+   * 清空dragData
+   */
+  const clearDragData = () => {
+    // 清空掉临时的dragData
+    _iframeWindow[DRAG_DATA] = '';
+    window[DRAG_DATA] = '';
   };
 
   /**
