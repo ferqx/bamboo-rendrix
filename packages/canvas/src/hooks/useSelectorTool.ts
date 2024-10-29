@@ -1,5 +1,5 @@
 import { RenderNode } from '@bamboo/renderer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface SelectorToolState {
   x: number;
@@ -58,6 +58,10 @@ export function useSelectorTool(options?: SelectorToolOptions) {
     selectedNode: undefined,
   });
 
+  // 保存state
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
   useEffect(() => {
     updateSelectorTool();
     watchElementResizeObserve();
@@ -66,12 +70,7 @@ export function useSelectorTool(options?: SelectorToolOptions) {
   let mutationObserver: MutationObserver;
 
   const setSelectorTool = (node: RenderNode) => {
-    // if (node === state.selectedNode) {
-    //   return;
-    // }
-
     mutationObserver?.disconnect();
-
     // 重新设置
     setState((prevState) => ({
       ...prevState,
@@ -83,10 +82,9 @@ export function useSelectorTool(options?: SelectorToolOptions) {
    * 更新选择工具坐标
    */
   const updateSelectorTool = () => {
-    const targetElement = state.selectedNode?.el as HTMLElement;
+    const targetElement = stateRef.current.selectedNode?.el as HTMLElement;
 
-    if (!targetElement || !targetElement.getBoundingClientRect) {
-      // clearSelectorTool();
+    if (!targetElement) {
       return;
     }
 
@@ -121,7 +119,7 @@ export function useSelectorTool(options?: SelectorToolOptions) {
    * 监听所选择的元素大小变化
    */
   const watchElementResizeObserve = () => {
-    const targetElement = state.selectedNode?.el;
+    const targetElement = stateRef.current.selectedNode?.el;
     if (!targetElement) {
       return;
     }

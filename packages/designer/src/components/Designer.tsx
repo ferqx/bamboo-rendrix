@@ -7,7 +7,7 @@ export const DesignerComponent = ({ designer }: { designer: Designer }) => {
   return (
     <TooltipProvider>
       <Layout>
-        <CanvasComponent {...designer.canvas}></CanvasComponent>
+        <CanvasComponent options={designer.options.canvas}></CanvasComponent>
       </Layout>
     </TooltipProvider>
   );

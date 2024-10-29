@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { RenderSchema } from '@bamboo/protocol';
 import { ChangeType, DRAG_DATA, RenderNode, Renderer, RootRenderNode } from '@bamboo/renderer';
 import { usePlaceholderTool } from './usePlaceholderTool';
@@ -25,15 +24,15 @@ export function useTool(options?: CanvasToolOptions) {
 
   let isDragIng = false;
 
-  const placeholderTool = usePlaceholderTool();
-
-  const selectorTool = useSelectorTool(options);
-
   const hoverTool = useHoverTool();
+  const placeholderTool = usePlaceholderTool();
+  const selectorTool = useSelectorTool();
 
+  /**
+   * 初始化事件
+   */
   const initEvent = (iframeWindow: Window, renderer: Renderer) => {
     _iframeWindow = iframeWindow;
-
     // 监听节点移动
     iframeWindow.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -169,7 +168,6 @@ export function useTool(options?: CanvasToolOptions) {
 
       // 如果是move类型，表明拖拽中的节点是画布中的节点
       if (e.dataTransfer?.effectAllowed === 'move') {
-        console.log('placeholderTool.pops', placeholderTool.pops);
         renderer.moveNode(dragNode!, targetNode!, placeholderTool.pops);
       } else if (e.dataTransfer?.effectAllowed === 'copy') {
         // 从外部拖入到画布中，插入新的节点
@@ -184,6 +182,7 @@ export function useTool(options?: CanvasToolOptions) {
       clearDragData();
       placeholderTool.clearPlaceholder();
     });
+    // 拖拽进入
     iframeWindow.addEventListener('dragenter', (e) => e.preventDefault());
     // 拖拽结束
     iframeWindow.addEventListener('dragend', clearState);
@@ -303,7 +302,7 @@ export function useTool(options?: CanvasToolOptions) {
 
   const onDelete = () => {
     selectorTool.state.selectedNode?.remove();
-    selectorTool.clearSelectorTool();
+    // selectorTool.clearSelectorTool();
   };
 
   const destroy = () => {

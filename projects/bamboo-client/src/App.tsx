@@ -5,11 +5,6 @@ function App() {
     canvas: {
       sandbox: {
         src: '/canvas.html',
-        load(_, renderer) {
-          renderer.onReloadChange(() => {
-            console.log('onReloadChange');
-          });
-        },
       },
     },
   });
