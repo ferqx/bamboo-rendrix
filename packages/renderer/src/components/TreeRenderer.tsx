@@ -11,7 +11,7 @@ const componentMap: { [key: string]: React.ComponentType<any> } = {
 };
 
 export interface MaterialComponentProps {
-  'data-id': string | number;
+  [DRAG_ITEM_DATA_ID]: string | number;
   style: React.CSSProperties;
   children?: React.ReactNode;
 }

@@ -246,25 +246,28 @@ export function useTool(options?: CanvasToolOptions) {
     window.addEventListener('mouseover', clearState);
 
     renderer.onNodeChange((e) => {
-      switch (e.type) {
-        case ChangeType.REPLACE:
-          e.oldNode === selectorTool.state.selectedNode && selectorTool.clearSelectorTool();
-          break;
-        case ChangeType.ADD:
-          selectorTool.setSelectorTool(e.node);
-          break;
-        case ChangeType.MOVE:
-          selectorTool.updateSelectorTool();
-          break;
-        case ChangeType.REMOVE:
-          selectorTool.clearSelectorTool();
-          break;
-        case ChangeType.PROP_CHANGE: // 属性的变更可能导致节点发生变化
-          selectorTool.updateSelectorTool();
-          break;
-        default:
-          break;
-      }
+      // TODO: 临时解决方案，未来需要一个全新的生命周期事件，包含内部节点事件触发 => 节点变更 => 外部节点事件触发 => 节点变更
+      setTimeout(() => {
+        switch (e.type) {
+          case ChangeType.REPLACE:
+            e.oldNode === selectorTool.state.selectedNode && selectorTool.clearSelectorTool();
+            break;
+          case ChangeType.ADD:
+            selectorTool.setSelectorTool(e.node);
+            break;
+          case ChangeType.MOVE:
+            selectorTool.updateSelectorTool();
+            break;
+          case ChangeType.REMOVE:
+            selectorTool.clearSelectorTool();
+            break;
+          case ChangeType.PROP_CHANGE: // 属性的变更可能导致节点发生变化
+            selectorTool.updateSelectorTool();
+            break;
+          default:
+            break;
+        }
+      }, 1000 / 60);
     });
   };
 
