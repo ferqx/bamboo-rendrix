@@ -5,44 +5,71 @@ import { AssetsMange } from './Assets';
 import { MaterialMange } from './Material';
 
 export interface ExtensionApi {
-  layout: Layout;
-  assetsMange: AssetsMange;
-  materialMange: MaterialMange;
+  addActiveBar: Layout['activeBar']['add'];
+  addAction: Layout['topToolBar']['add'];
+  addAsset: AssetsMange['add'];
+  addMaterial: MaterialMange['addMaterial'];
   assets: AssetSchema[];
   materials: MaterialSchema[];
 }
 
+export type ExtensionFn = (api: ExtensionApi) => void;
+
+export type ExtensionInstallConfig = {
+  name: string;
+  install: ExtensionFn;
+};
+
 /**
- * 扩展接口，扩展接口会对扩展暴露有限的api
- * 支持扩展布局，但是又不影响其他扩展
- * 支持添加物料
+ * 返回扩展api集合
  */
-export interface Extension {
-  install(api: ExtensionApi): void;
+function getExtensionAPI(designer: Designer): ExtensionApi {
+  const { layout, assetsMange, materialMange } = designer;
+  return {
+    addActiveBar: layout.activeBar.add.bind(layout.activeBar),
+    addAction: layout.topToolBar.add.bind(layout.topToolBar),
+    addAsset: assetsMange.add.bind(assetsMange),
+    addMaterial: materialMange.addMaterial.bind(materialMange),
+    get assets() {
+      return assetsMange.assets;
+    },
+    get materials() {
+      return materialMange.materials;
+    },
+  };
 }
 
-export class APIProxy {
-  private originalAPI: Designer;
+/**
+ * 扩展管理
+ */
+export class ExtensionManage {
+  private extensionMap = new Map<string, ExtensionFn>();
 
-  constructor(originalAPI: Designer) {
-    this.originalAPI = originalAPI;
+  constructor(private designer: Designer, objs: ExtensionInstallConfig[]) {
+    objs.forEach((item) => {
+      this.registerExtension(item.name, item.install);
+    });
+  }
+
+  getExtension(name: string) {
+    return this.extensionMap.get(name);
   }
 
   /**
-   * 返回有限api
+   * 注册扩展
    */
-  getLimitedAPI(): ExtensionApi {
-    const { layout, assetsMange, materialMange } = this.originalAPI;
-    return {
-      layout,
-      assetsMange: assetsMange,
-      materialMange: materialMange,
-      get assets() {
-        return assetsMange.assets;
-      },
-      get materials() {
-        return materialMange.materials;
-      },
-    };
+  registerExtension(name: string, fn: ExtensionFn): void {
+    const fns = Array.from(this.extensionMap.values());
+
+    // 如果已经存在相同的注册函数
+    if (fns.includes(fn)) {
+      console.info('已注册相同扩展');
+      return;
+    }
+
+    this.extensionMap.set(name, fn);
+
+    // 运行插件
+    fn(getExtensionAPI(this.designer));
   }
 }

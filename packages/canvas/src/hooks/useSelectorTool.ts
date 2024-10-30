@@ -128,12 +128,15 @@ export function useSelectorTool(options?: SelectorToolOptions) {
   };
 
   const clearSelectorTool = () => {
-    setState((prevState) => ({
-      ...prevState,
-      visible: true,
+    setState({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      visible: false,
       settingVisible: false,
       selectedNode: undefined,
-    }));
+    });
     mutationObserver?.disconnect();
   };
 

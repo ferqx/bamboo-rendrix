@@ -1,8 +1,8 @@
 import { Canvas, CanvasOptions } from '@bamboo/canvas';
-import { Extension, APIProxy } from './Extension';
 import { Layout } from './layout';
 import { MaterialMange } from './Material';
 import { AssetsMange } from './Assets';
+import { ExtensionManage } from './Extension';
 
 export interface DesignerOptions {
   canvas: CanvasOptions;
@@ -16,8 +16,6 @@ export class Designer {
 
   options!: DesignerOptions;
 
-  extensions: Extension[] = [];
-
   canvas!: Canvas;
 
   get renderer() {
@@ -28,18 +26,11 @@ export class Designer {
 
   assetsMange: AssetsMange = new AssetsMange(this.materialMange);
 
-  /**
-   * 注册扩展
-   */
-  registerExtension(extension: Extension): void {
-    const apiProxy = new APIProxy(this);
-    const limitedAPI = apiProxy.getLimitedAPI();
-    this.extensions.push(extension);
-    extension.install(limitedAPI);
-  }
+  extensionManage: ExtensionManage;
 
   constructor(options: DesignerOptions) {
     this.options = options;
     this.layout = new Layout();
+    this.extensionManage = new ExtensionManage(this, []);
   }
 }

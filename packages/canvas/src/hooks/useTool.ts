@@ -46,14 +46,12 @@ export function useTool(options?: CanvasToolOptions) {
 
       if (!targetElement) {
         clearState();
-        console.log('targetElement is undefined');
         return;
       }
 
       targetNode = renderer.getNodeByElement(targetElement);
 
       if (!targetNode) {
-        console.log('targetNode is undefined');
         return;
       }
 

@@ -44,6 +44,8 @@
   height: 0px;
   z-index: 99;
   transform: translate(-9999px, -9999px);
+  will-change: transform;
+  transition: none;
   border: 2px solid rgba(0, 119, 255, 1);
   pointer-events: none;
 }

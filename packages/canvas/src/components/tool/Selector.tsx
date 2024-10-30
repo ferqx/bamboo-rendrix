@@ -10,7 +10,7 @@ export interface SelectorToolProps {
   delete: () => void;
 }
 
-export const Selector = ({ state, options }: SelectorToolProps) => {
+export const Selector = ({ state, delete: handleDelete }: SelectorToolProps) => {
   const size = 24;
 
   const headerTop = useMemo(() => {
@@ -79,8 +79,8 @@ export const Selector = ({ state, options }: SelectorToolProps) => {
             }}
           >
             <div className="bm-selector-actions">
-              {!options?.isCoverAction && (
-                <div className="bm-selector-action-item" v-if="state.selectedNode?.allowDelete">
+              {state.selectedNode?.allowDelete && (
+                <div className="bm-selector-action-item" onClick={() => handleDelete()}>
                   <i className="">
                     <Trash2 size={16} />
                   </i>
