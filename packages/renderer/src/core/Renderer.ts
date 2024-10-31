@@ -5,6 +5,8 @@ import { ResourceManager } from './ResourceManager';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
 import { DisposableStore, EventEmitter, IDisposable } from './event';
 import { ComponentManager } from './ComponentManager';
+import { createRoot, Root } from 'react-dom/client';
+import { RendererComponent } from '../components/RendererComponent';
 
 export interface RendererOptions {
   /**
@@ -20,8 +22,8 @@ export interface RendererOptions {
    */
   isPreview?: boolean;
   /**
-   * 设计器模式下 - 资产是被动注入
-   * 预览模式下 - 资产是主动注入，因为预览模式下渲染器与设计器脱离的结构关系
+   * 设计器模式下 - 资产是被动注入，isPreview为false时该值不生效
+   * 预览模式下 - 资产是主动注入，因为预览模式下渲染器与设计器脱离的结构关系，isPreview为true时该值不生效
    */
   assets?: AssetSchema[];
 }
@@ -31,6 +33,8 @@ export interface RendererOptions {
  */
 export class Renderer {
   rootNode: RootRenderNode;
+
+  rootApp!: Root;
 
   get window() {
     return window;
@@ -107,12 +111,21 @@ export class Renderer {
   materials: MaterialSchema[] = [];
 
   constructor(public options: RendererOptions) {
-    const { assets, schema, limit } = options;
-    this.assets = assets || [];
+    const { assets, schema, limit, isPreview } = options;
+    this.assets = isPreview ? assets || [] : [];
     this.resourceManager = new ResourceManager();
     this.componentManager = new ComponentManager();
     this.rootNode = new RootRenderNode(schema, this);
     this.rootNode.childLimit = limit || Number.MAX_SAFE_INTEGER;
+  }
+
+  mount(el: HTMLElement) {
+    if (!el) {
+      console.error('el is required');
+      return;
+    }
+    this.rootApp = createRoot(el);
+    this.rootApp.render(RendererComponent(this));
   }
 
   reload(schema: RenderSchema) {
@@ -213,7 +226,8 @@ export class Renderer {
     return newNode;
   }
 
-  destroy() {
+  unmount() {
     this.disposables.dispose();
+    this.rootApp.unmount();
   }
 }

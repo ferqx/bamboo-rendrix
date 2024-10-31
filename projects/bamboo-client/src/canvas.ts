@@ -1,6 +1,7 @@
-import { useRenderer } from '@bamboo/designer';
+import { createRenderer } from '@bamboo/designer';
+import { RenderSchema } from '@bamboo/protocol';
 
-const schema = {
+const schema: RenderSchema = {
   id: 1,
   componentName: 'div',
   children: [
@@ -17,6 +18,11 @@ const schema = {
     {
       id: 3,
       componentName: 'button',
+      props: {
+        style: {
+          width: '100%',
+        },
+      },
       children: ['2'],
     },
     {
@@ -27,14 +33,13 @@ const schema = {
     {
       id: 5,
       componentName: 'div',
-      isContainer: true,
       children: ['4'],
     },
   ],
 };
 
-const { mountRenderer } = useRenderer();
-
-mountRenderer(document.getElementById('app')!, {
+const renderer = createRenderer({
   schema,
 });
+
+renderer.mount(document.getElementById('app')!);
