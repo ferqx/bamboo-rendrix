@@ -4,6 +4,7 @@ import { RootRenderNode } from './RootRenderNode';
 import { ResourceManager } from './ResourceManager';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
 import { DisposableStore, EventEmitter, IDisposable } from './event';
+import { ComponentManager } from './ComponentManager';
 
 export interface RendererOptions {
   /**
@@ -39,6 +40,11 @@ export class Renderer {
    * 资源管理
    */
   readonly resourceManager: ResourceManager;
+
+  /**
+   * 组件管理
+   */
+  readonly componentManager: ComponentManager;
 
   /**
    * 资产数据
@@ -104,6 +110,7 @@ export class Renderer {
     const { assets, schema, limit } = options;
     this.assets = assets || [];
     this.resourceManager = new ResourceManager();
+    this.componentManager = new ComponentManager();
     this.rootNode = new RootRenderNode(schema, this);
     this.rootNode.childLimit = limit || Number.MAX_SAFE_INTEGER;
   }

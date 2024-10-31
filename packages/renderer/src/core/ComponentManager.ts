@@ -1,7 +1,8 @@
-import { ComponentType, ReactNode } from 'react';
+import { builtComponents } from '../components/BuiltComponents';
+import { ComponentType } from 'react';
 
 // 定义一个接口来描述组件的元数据
-interface ComponentMeta {
+export interface ComponentMeta {
   name: string;
   component: ComponentType<any>;
 }
@@ -9,6 +10,12 @@ interface ComponentMeta {
 // 创建一个类来管理 React 自定义组件
 export class ComponentManager {
   private components: Map<string, ComponentType<any>> = new Map();
+
+  constructor() {
+    Object.entries(builtComponents).forEach(([name, component]) => {
+      this.components.set(name, component);
+    });
+  }
 
   // 注册组件
   registerComponent(meta: ComponentMeta): void {

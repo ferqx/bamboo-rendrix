@@ -16,12 +16,12 @@ const schema = {
     },
     {
       id: 3,
-      componentName: 'div',
+      componentName: 'button',
       children: ['2'],
     },
     {
       id: 4,
-      componentName: 'div',
+      componentName: 'span',
       children: ['3'],
     },
     {

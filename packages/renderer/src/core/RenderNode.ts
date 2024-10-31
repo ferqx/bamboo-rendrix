@@ -26,6 +26,15 @@ export class RenderNode {
     return window.document.querySelector(`[data-id="${this.id}"]`);
   }
 
+  private _component: ComponentType<any> | undefined;
+
+  get component() {
+    if (this._component) {
+      return this._component;
+    }
+    return (this._component = this.renderer?.componentManager.getComponent(this.componentName));
+  }
+
   /**
    * 是否是异步组件
    */

@@ -5,11 +5,6 @@ import { DragWrappedComponentProps, withDrag } from './Drag';
 import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
 import { RendererContext } from './RendererProvider';
 
-const componentMap: { [key: string]: React.ComponentType<any> } = {
-  div: (props: any) => <div {...props}>{props.children}</div>,
-  button: (props: any) => <button {...props}>{props.children}</button>,
-};
-
 export interface MaterialComponentProps {
   [DRAG_ITEM_DATA_ID]: string | number;
   style: React.CSSProperties;
@@ -24,7 +19,7 @@ const RenderDragComponent = ({ node }: { node: RenderNode }) => {
 };
 
 function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: DragWrappedComponentProps }) {
-  let Component = componentMap[node.componentName];
+  let Component = node.component;
 
   const style = node.props?.style || {};
 
@@ -43,7 +38,7 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
   }
 
   if (isFragmentComponent(<Component />)) {
-    const FragmentComponent = componentMap[node.componentName];
+    const FragmentComponent = Component;
     Component = (props: MaterialComponentProps) => (
       <div {...props}>
         <FragmentComponent {...node.props}>{props.children}</FragmentComponent>
