@@ -21,7 +21,7 @@ export function LayoutComponent(props: LayoutProps) {
         <nav className="grid gap-1 p-2">
           {activeBar.views.map((item) => {
             return (
-              <Tooltip>
+              <Tooltip key={item.id}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
