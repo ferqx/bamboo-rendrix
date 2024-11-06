@@ -1,5 +1,6 @@
 import { createRenderer } from '@bamboo/designer';
 import { RenderSchema } from '@bamboo/protocol';
+import { Button, Input, InputNumber } from 'antd';
 
 const schema: RenderSchema = {
   id: 1,
@@ -27,13 +28,17 @@ const schema: RenderSchema = {
     },
     {
       id: 4,
-      componentName: 'span',
-      children: ['3'],
+      componentName: 'input',
+      props: {
+        placeholder: '请输入',
+      },
     },
     {
       id: 5,
-      componentName: 'div',
-      children: ['4'],
+      componentName: 'inputNumber',
+      props: {
+        placeholder: '请输入',
+      },
     },
   ],
 };
@@ -41,5 +46,9 @@ const schema: RenderSchema = {
 const renderer = createRenderer({
   schema,
 });
+
+renderer.componentManager.registerComponent('button', Button);
+renderer.componentManager.registerComponent('input', Input);
+renderer.componentManager.registerComponent('inputNumber', InputNumber);
 
 renderer.mount(document.getElementById('app')!);
