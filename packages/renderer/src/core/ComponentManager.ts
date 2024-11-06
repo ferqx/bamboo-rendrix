@@ -1,13 +1,11 @@
 import { builtComponents } from '../components/BuiltComponents';
 import { ComponentType } from 'react';
 
-// 定义一个接口来描述组件的元数据
 export interface ComponentMeta {
   name: string;
   component: ComponentType<any>;
 }
 
-// 创建一个类来管理 React 自定义组件
 export class ComponentManager {
   private components: Map<string, ComponentType<any>> = new Map();
 
@@ -17,12 +15,15 @@ export class ComponentManager {
     });
   }
 
-  // 注册组件
-  registerComponent(meta: ComponentMeta): void {
-    if (this.components.has(meta.name)) {
-      throw new Error(`Component with name ${meta.name} is already registered.`);
+  /**
+   * 注册组件
+   */
+  registerComponent(name: string, component: ComponentType<any>): void {
+    // 内置组件可以被覆盖，但是自定义组件不可以被覆盖
+    if (!(name in builtComponents) && this.components.has(name)) {
+      throw new Error(`Component with name ${name} is already registered.`);
     }
-    this.components.set(meta.name, meta.component);
+    this.components.set(name, component);
   }
 
   // 获取组件

@@ -48,7 +48,7 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
 
   return (
     <Component {...mergedProps} {...(dragProps || {})}>
-      <RenderChildComponents nodes={node.children} />
+      {node.children.length > 0 ? <RenderChildComponents nodes={node.children} /> : undefined}
     </Component>
   );
 }
