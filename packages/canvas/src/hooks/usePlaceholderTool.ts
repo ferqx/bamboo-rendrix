@@ -43,9 +43,9 @@ export function usePlaceholderTool() {
   const setTargetPlaceholder = (target: HTMLElement, position: Position) => {
     const { left, right, top, bottom, width, height } = target.getBoundingClientRect();
     if (position === 'top') {
-      setPlaceholder(left, top + 1, width, defaultPx, 1);
+      setPlaceholder(left, top - 2, width, defaultPx, 1);
     } else if (position === 'bottom') {
-      setPlaceholder(left, bottom - 1, width, defaultPx, -1);
+      setPlaceholder(left, bottom - 2, width, defaultPx, -1);
     } else if (position === 'left') {
       setPlaceholder(left, top, defaultPx, height, 1);
     } else if (position === 'right') {
