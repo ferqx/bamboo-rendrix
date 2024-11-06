@@ -90,9 +90,6 @@ importers:
 
   packages/canvas:
     dependencies:
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
       lucide-react:
         specifier: ^0.427.0
         version: 0.427.0(react@18.3.1)
@@ -102,12 +99,6 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      tailwind-merge:
-        specifier: ^2.5.0
-        version: 2.5.4
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.13)
     devDependencies:
       '@bamboo/components':
         specifier: workspace:^
@@ -118,6 +109,15 @@ importers:
       '@bamboo/renderer':
         specifier: workspace:^
         version: link:../renderer
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
+      tailwind-merge:
+        specifier: ^2.5.4
+        version: 2.5.4
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.13)
 
   packages/components:
     dependencies:
@@ -241,6 +241,9 @@ importers:
       '@bamboo/renderer':
         specifier: workspace:^
         version: link:../renderer
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       lucide-react:
         specifier: ^0.427.0
         version: 0.427.0(react@18.3.1)

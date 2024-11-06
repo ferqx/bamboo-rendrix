@@ -1,11 +1,15 @@
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/components';
-import { Book, Bot, Code2, LifeBuoy, Settings2, Share, SquareTerminal, SquareUser, Triangle } from 'lucide-react';
-
+import { LifeBuoy, Share, SquareUser, Triangle } from 'lucide-react';
+import classNames from 'classnames';
+import { Layout } from '../core';
 interface LayoutProps {
+  layout: Layout;
   children: React.ReactNode;
 }
 
-export function Layout(props: LayoutProps) {
+export function LayoutComponent(props: LayoutProps) {
+  const { activeBar, topToolBar } = props.layout;
+
   return (
     <div className="flex h-screen w-full">
       <aside className="z-20 flex h-full flex-col border-r">
@@ -15,56 +19,25 @@ export function Layout(props: LayoutProps) {
           </Button>
         </div>
         <nav className="grid gap-1 p-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-lg bg-muted" aria-label="Playground">
-                <SquareTerminal className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Bamboo
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-lg" aria-label="Models">
-                <Bot className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Models
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-lg" aria-label="API">
-                <Code2 className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              API
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-lg" aria-label="Documentation">
-                <Book className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Documentation
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-lg" aria-label="Settings">
-                <Settings2 className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Settings
-            </TooltipContent>
-          </Tooltip>
+          {activeBar.views.map((item) => {
+            return (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={classNames('rounded-lg', { 'bg-muted': false })}
+                    aria-label="Models"
+                  >
+                    <item.icon />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={5}>
+                  {item.name}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
         </nav>
         <nav className="mt-auto grid gap-1 p-2">
           <Tooltip>
@@ -97,7 +70,9 @@ export function Layout(props: LayoutProps) {
             发布
           </Button>
         </header>
-        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 relative bg-[#e5e5e5]">{props.children}</main>
+        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3 relative bg-[#e5e5e5]">
+          {props.children}
+        </main>
       </div>
     </div>
   );

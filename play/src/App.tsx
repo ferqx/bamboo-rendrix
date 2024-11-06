@@ -1,4 +1,5 @@
 import { DesignerComponent, useDesigner } from '@bamboo/designer';
+import componentList from './extensions/component-list';
 
 function App() {
   const { designer } = useDesigner({
@@ -8,6 +9,8 @@ function App() {
       },
     },
   });
+
+  designer.extensionManage.registerExtension('componentList', componentList);
 
   return <DesignerComponent designer={designer}></DesignerComponent>;
 }

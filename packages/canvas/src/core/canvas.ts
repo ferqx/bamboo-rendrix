@@ -24,6 +24,6 @@ export class Canvas {
 
   destroy() {
     this.tool.destroy();
-    this.renderer?.destroy();
+    this.renderer?.unmount();
   }
 }

@@ -2,14 +2,17 @@
   "name": "@bamboo/designer",
   "version": "0.0.1",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/bm-designer.es.js",
   "module": "./dist/bm-designer.umd.js",
   "exports": {
     ".": {
       "import": "./dist/bm-designer.es.js",
       "require": "./dist/bm-designer.umd.js"
-    }
+    },
+    "./dist/style.css": "./dist/style.css"
   },
   "scripts": {
     "dev": "vite",
@@ -26,6 +29,7 @@
     "@bamboo/canvas": "workspace:^",
     "@bamboo/components": "workspace:^",
     "@bamboo/protocol": "workspace:^",
-    "@bamboo/renderer": "workspace:^"
+    "@bamboo/renderer": "workspace:^",
+    "classnames": "^2.5.1"
   }
 }

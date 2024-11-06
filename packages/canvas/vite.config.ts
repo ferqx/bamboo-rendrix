@@ -18,7 +18,7 @@ export default defineConfig({
       fileName: (format) => `bm-canvas.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', /@bamboo\/*/],
+      external: ['react', 'react-dom', 'classnames', /@bamboo\/*/],
       output: {
         globals: {
           react: 'React',

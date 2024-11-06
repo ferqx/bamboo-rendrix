@@ -25,10 +25,6 @@ export class ActiveBar {
    */
   readonly views: ActiveBarItem[] = [] as const;
   /**
-   * 选中ID
-   */
-  activeId!: string;
-  /**
    *  单个模式 - 隐藏活动状态栏和close按钮，默认显示第一个活动状态栏
    */
   singleMode = false;
@@ -54,7 +50,7 @@ export class ActiveBarItem {
   /**
    * 视图组件
    */
-  component: React.ComponentType;
+  component: React.ComponentType<any>;
   /**
    * 是否显示, 如果设置为true页面初始化时默认显示
    */
@@ -62,7 +58,7 @@ export class ActiveBarItem {
   /**
    * 图标
    */
-  icon: React.ComponentType;
+  icon: React.ComponentType<any>;
 
   parent: ActiveBar;
 
@@ -77,23 +73,5 @@ export class ActiveBarItem {
     this.visible = !!options.visible;
     this.icon = options.icon;
     this.parent = parent;
-  }
-
-  show() {
-    this.visible = true;
-    this.parent.activeId = this.id;
-  }
-
-  hide() {
-    this.visible = false;
-    this.parent.activeId = '';
-  }
-
-  remove() {
-    if (this.index > -1) {
-      this.parent.views.splice(this.index, 1);
-    } else {
-      console.warn('活动视图移除失败!');
-    }
   }
 }

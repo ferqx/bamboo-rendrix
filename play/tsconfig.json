@@ -32,16 +32,16 @@
         "src/*"
       ],
       "@bamboo/designer": [
-        "../../packages/designer/src/index.ts"
+        "../packages/designer/src/index.ts"
       ],
       "@bamboo/canvas": [
-        "../../packages/canvas/src/index.ts"
+        "../packages/canvas/src/index.ts"
       ],
       "@bamboo/renderer": [
-        "../../packages/renderer/src/index.ts"
+        "../packages/renderer/src/index.ts"
       ],
       "@bamboo/protocol": [
-        "../../packages/protocol/src/index.ts"
+        "../packages/protocol/src/index.ts"
       ],
     },
   },
