@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 export const CanvasComponent = ({ options }: { options: CanvasOptions }) => {
   const canvas = useMemo(() => new Canvas(options), []);
 
-  const { selectorTool, hoverTool, placeholderTool, initEvent, clearState, onDelete } = useTool(options.tool);
+  const { selectorTool, hoverTool, placeholderTool, initEvent, clearState } = useTool(options.tool);
 
   const onDone = (iframeWindow: Window, renderer: Renderer) => {
     canvas.renderer = renderer;
@@ -25,7 +25,7 @@ export const CanvasComponent = ({ options }: { options: CanvasOptions }) => {
 
   return (
     <div className="bm-canvas">
-      <Selector state={selectorTool.state} options={options.tool} delete={onDelete} />
+      <Selector state={selectorTool.state} options={options.tool} />
       <Hover state={hoverTool.state} />
       <Placeholder state={placeholderTool.state}></Placeholder>
       <div className="bm-canvas-container">

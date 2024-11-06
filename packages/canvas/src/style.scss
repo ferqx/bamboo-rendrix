@@ -46,7 +46,7 @@
   transform: translate(-9999px, -9999px);
   will-change: transform;
   transition: none;
-  border: 2px solid rgba(0, 119, 255, 1);
+  border: 2px solid rgb(0, 119, 255);
   pointer-events: none;
 }
 
@@ -67,6 +67,7 @@
   }
 
   .bm-selector-actions {
+    margin-left: auto;
     border-radius: 3px 3px 0 0;
     overflow: hidden;
   }

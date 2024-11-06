@@ -7,10 +7,9 @@ import { SelectorToolOptions, SelectorToolState } from '../../hooks';
 export interface SelectorToolProps {
   state: SelectorToolState;
   options?: SelectorToolOptions;
-  delete: () => void;
 }
 
-export const Selector = ({ state, delete: handleDelete }: SelectorToolProps) => {
+export const Selector = ({ state, options }: SelectorToolProps) => {
   const size = 24;
 
   const headerTop = useMemo(() => {
@@ -56,7 +55,7 @@ export const Selector = ({ state, delete: handleDelete }: SelectorToolProps) => 
       {/* 选择提示 */}
       {state.selectedNode && (
         <>
-          <div
+          {/* <div
             className={`bm-selector-header-popover ${isHeaderBottom ? 'bottom' : ''}`}
             style={{
               transform: `translate(${state.x}px, ${headerTop}px)`,
@@ -69,18 +68,21 @@ export const Selector = ({ state, delete: handleDelete }: SelectorToolProps) => 
                 {state.selectedNode?.name}
               </div>
             </div>
-          </div>
+          </div> */}
           <div
-            className={classNames('bm-selector-footer-popover', { top: isFooterTop })}
+            className={classNames('bm-selector-header-popover', { bottom: isHeaderBottom })}
             style={{
-              transform: `translate(${state.x}px, ${footerTop}px)`,
+              transform: `translate(${state.x}px, ${headerTop}px)`,
               minWidth: state.width + 'px',
               visibility: state.visible ? 'visible' : 'hidden',
             }}
           >
             <div className="bm-selector-actions">
+              <div className="bm-selector-action-item" style={{ padding: '0 8px' }}>
+                {state.selectedNode?.name}
+              </div>
               {state.selectedNode?.allowDelete && (
-                <div className="bm-selector-action-item" onClick={() => handleDelete()}>
+                <div className="bm-selector-action-item" onClick={() => state.selectedNode?.remove()}>
                   <i className="">
                     <Trash2 size={16} />
                   </i>
