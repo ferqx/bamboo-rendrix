@@ -7,6 +7,7 @@ import { DisposableStore, EventEmitter, IDisposable } from './event';
 import { ComponentManager } from './ComponentManager';
 import { createRoot, Root } from 'react-dom/client';
 import { RendererComponent } from '../components/RendererComponent';
+import { nextTick } from '../hooks/useNestTick';
 
 export interface RendererOptions {
   /**
@@ -64,6 +65,8 @@ export class Renderer {
   private nodeChangeEmitter = new EventEmitter<NodeChangeEvent>();
 
   private reloadChangeEmitter = new EventEmitter<void>();
+
+  nextTick = nextTick;
 
   /**
    * 重新加载事件

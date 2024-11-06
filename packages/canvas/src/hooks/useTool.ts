@@ -246,8 +246,7 @@ export function useTool(options?: CanvasToolOptions) {
     window.addEventListener('mouseover', clearState);
 
     renderer.onNodeChange((e) => {
-      // TODO: 临时解决方案，未来需要一个全新的生命周期事件，包含内部节点事件触发 => 节点变更 => 外部节点事件触发 => 节点变更
-      setTimeout(() => {
+      renderer.nextTick(() => {
         switch (e.type) {
           case ChangeType.REPLACE:
             e.oldNode === selectorTool.state.selectedNode && selectorTool.clearSelectorTool();
@@ -267,7 +266,7 @@ export function useTool(options?: CanvasToolOptions) {
           default:
             break;
         }
-      }, 1000 / 60);
+      });
     });
   };
 

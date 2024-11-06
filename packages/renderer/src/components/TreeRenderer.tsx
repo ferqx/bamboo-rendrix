@@ -4,6 +4,7 @@ import { isFragmentComponent, transformStyle } from '../utils';
 import { DragWrappedComponentProps, withDrag } from './Drag';
 import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
 import { RendererContext } from './RendererProvider';
+import { useNextTick } from '../hooks/useNestTick';
 
 export interface MaterialComponentProps {
   [DRAG_ITEM_DATA_ID]: string | number;
@@ -21,6 +22,8 @@ const RenderDragComponent = ({ node }: { node: RenderNode }) => {
 function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: DragWrappedComponentProps }) {
   let Component = node.component;
 
+  const options = useContext(RendererContext);
+
   const style = node.props?.style || {};
 
   const transformedStyle = style ? transformStyle(style || {}) : undefined;
@@ -30,6 +33,8 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
     [DRAG_ITEM_DATA_ID]: node.id,
     className: DRAG_ITEM_CLASS_NAME,
     style: transformedStyle,
+    // 设计态下不触发自定义组件事件
+    readOnly: !options?.isPreview,
   };
 
   if (!Component) {
@@ -74,18 +79,19 @@ const RenderChildComponents = ({ nodes }: { nodes: (RenderNode | RenderTextNode)
 
 function RenderRootComponent({ node }: { node: RenderNode }) {
   const [state, setVersion] = useState(0); // 用于触发组件更新
+
   // TODO: 后续尝试局部 change 的优化
   useEffect(() => {
     // 设置更新回调，当 TreeNode 更新时触发组件的DOM更新
     const changeEvent = node.renderer?.onNodeChange(() => {
+      // 同步更新
       setVersion((version) => (version === Number.MAX_VALUE ? 0 : version + 1));
     });
     return () => changeEvent?.dispose();
   }, []);
 
-  useEffect(() => {
-    console.log('更新了');
-  }, [state]);
+  // 渲染器组件更新后触发
+  useNextTick();
 
   const props = {
     [DRAG_ITEM_DATA_ID]: node.id,
