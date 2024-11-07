@@ -2,10 +2,8 @@
   "name": "bamboo",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "./play vite",
+    "lint": "eslint ."
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
