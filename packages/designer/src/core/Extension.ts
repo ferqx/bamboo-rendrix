@@ -5,7 +5,7 @@ import { AssetsMange } from './Assets';
 import { MaterialMange } from './Material';
 
 export interface ExtensionApi {
-  addActiveBar: Layout['activeBar']['add'];
+  addActivityBar: Layout['activityBar']['add'];
   addAction: Layout['topToolBar']['add'];
   addAsset: AssetsMange['add'];
   addMaterial: MaterialMange['addMaterial'];
@@ -26,7 +26,7 @@ export type ExtensionInstallConfig = {
 function getExtensionAPI(designer: Designer): ExtensionApi {
   const { layout, assetsMange, materialMange } = designer;
   return {
-    addActiveBar: layout.activeBar.add.bind(layout.activeBar),
+    addActivityBar: layout.activityBar.add.bind(layout.activityBar),
     addAction: layout.topToolBar.add.bind(layout.topToolBar),
     addAsset: assetsMange.add.bind(assetsMange),
     addMaterial: materialMange.addMaterial.bind(materialMange),

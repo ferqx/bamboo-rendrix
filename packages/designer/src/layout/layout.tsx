@@ -2,7 +2,7 @@ import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/compone
 import { LifeBuoy, Share, SquareUser, Triangle, X } from 'lucide-react';
 import classNames from 'classnames';
 import { Layout } from '../core';
-import { useActiveBar } from '../hooks/useActiveBar';
+import { useActivityBar } from '../hooks';
 
 interface LayoutProps {
   layout: Layout;
@@ -10,9 +10,9 @@ interface LayoutProps {
 }
 
 export function LayoutComponent(props: LayoutProps) {
-  const { activeBar, topToolBar } = props.layout;
+  const { activityBar, topToolBar } = props.layout;
 
-  const { activatedBar, activatedView, closeView } = useActiveBar(activeBar.views);
+  const { activatedBar, activatedView, closeView } = useActivityBar(activityBar.views);
 
   const ActivatedView = () => {
     if (activatedBar) {
@@ -20,7 +20,7 @@ export function LayoutComponent(props: LayoutProps) {
         <div className="w-80 top-0 left-0">
           <div className="relative p-4 flex justify-between items-center">
             <p className="text-lg">{activatedBar.name}</p>
-            <Button variant="outline" size="icon" className="size-7 border-0" onClick={() => closeView()}>
+            <Button variant="outline" size="icon" className="size-7 border-0 shadow-none" onClick={() => closeView()}>
               <X className="size-4 fill-foreground" />
             </Button>
           </div>
@@ -34,7 +34,7 @@ export function LayoutComponent(props: LayoutProps) {
   const ActiveBarNavButtons = () => {
     return (
       <>
-        {activeBar.views.map((item) => {
+        {activityBar.views.map((item) => {
           return (
             <Tooltip key={item.id}>
               <TooltipTrigger asChild>

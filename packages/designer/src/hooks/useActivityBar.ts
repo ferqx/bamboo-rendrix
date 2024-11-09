@@ -1,7 +1,7 @@
-import { ActiveBarItem } from '../core';
+import { ActivityBarItem } from '../core';
 import { useMemo, useState } from 'react';
 
-export function useActiveBar(activeBars: ActiveBarItem[]) {
+export function useActivityBar(activeBars: ActivityBarItem[]) {
   const [state, setState] = useState('');
 
   const activatedBar = useMemo(() => {

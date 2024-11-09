@@ -3,7 +3,7 @@ import { ComponentIcon } from 'lucide-react';
 import { ComponentList } from './view';
 
 const install = (context: ExtensionApi) => {
-  context.addActiveBar({
+  context.addActivityBar({
     name: '组件列表',
     component: ComponentList,
     icon: ComponentIcon,
