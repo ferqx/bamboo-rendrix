@@ -10,6 +10,7 @@ export interface DragProps {
 }
 
 export interface DragWrappedComponentProps {
+  data: RenderNode | RenderSchema;
   draggable: boolean;
   onDragStart: (e: React.DragEvent) => void;
 }
@@ -44,6 +45,7 @@ export const withDrag = (WrappedComponent: React.ComponentType<any>) => {
     };
 
     const props: DragWrappedComponentProps = {
+      data,
       draggable: true,
       onDragStart,
     };

@@ -18,10 +18,10 @@ export function LayoutComponent(props: LayoutProps) {
     if (activatedBar) {
       return (
         <div className="w-80 top-0 left-0">
-          <div className="relative p-4 flex justify-between items-center">
-            <p className="text-lg">{activatedBar.name}</p>
+          <div className="relative p-2 px-4 pr-3 flex justify-between items-center border-b">
+            <p className="text-sm font-bold">{activatedBar.name}</p>
             <Button variant="outline" size="icon" className="size-7 border-0 shadow-none" onClick={() => closeView()}>
-              <X className="size-4 fill-foreground" />
+              <X className="size-3 fill-foreground" />
             </Button>
           </div>
           <activatedBar.component />
@@ -57,6 +57,41 @@ export function LayoutComponent(props: LayoutProps) {
     );
   };
 
+  const TopActions = () => {
+    return (
+      <div className="flex gap-2 ml-auto">
+        {topToolBar.actions
+          .filter((item) => item.placement === 'topRight')
+          .map((item) => {
+            return <item.component key={item.id} />;
+          })}
+      </div>
+    );
+  };
+
+  const LeftBottomActions = () => {
+    return (
+      <>
+        {topToolBar.actions
+          .filter((item) => item.placement === 'leftBottom')
+          .map((item) => {
+            return (
+              <Tooltip key={item.id}>
+                <TooltipTrigger asChild>
+                  <div>
+                    <item.component />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={5}>
+                  {item.name}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+      </>
+    );
+  };
+
   return (
     <div className="flex flex-col h-screen w-full">
       <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background pr-4 pl-0.5">
@@ -66,10 +101,7 @@ export function LayoutComponent(props: LayoutProps) {
           </Button>
         </div>
         <h1 className="text-xl font-semibold">Bamboo</h1>
-        <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm">
-          <Share className="size-3.5" />
-          发布
-        </Button>
+        <TopActions />
       </header>
       <div className="flex flex-1">
         <aside className="relative z-20 flex h-full border-r">
@@ -78,26 +110,7 @@ export function LayoutComponent(props: LayoutProps) {
               <ActiveBarNavButtons />
             </nav>
             <nav className="mt-auto grid gap-1 p-2">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Help">
-                    <LifeBuoy className="size-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={5}>
-                  Help
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="mt-auto rounded-lg" aria-label="Account">
-                    <SquareUser className="size-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={5}>
-                  Account
-                </TooltipContent>
-              </Tooltip>
+              <LeftBottomActions />
             </nav>
           </div>
           <ActivatedView />
