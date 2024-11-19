@@ -1,3 +1,9 @@
-# Bamboo 一个简单的低代码平台, 最小内核、最强生态，支持扩展
+# Bamboo 一个简单的低代码平台，支持扩展
 
-## 开发中ing
+## 如何开始
+
+```shell
+pnpm i
+npm run build
+cd play & npm run dev
+```
