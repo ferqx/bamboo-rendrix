@@ -1,5 +1,5 @@
 import { withDrag } from '@bamboo/renderer';
-import {} from '@bamboo/components';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@bamboo/components';
 import { Square } from 'lucide-react';
 
 export const ComponentList = () => {
@@ -14,10 +14,31 @@ export const ComponentList = () => {
   ));
 
   return (
-    <div className="grid grid-cols-3">
-      <DragComponent data={{ componentName: 'button' }} dragType={'copy'} />
-      <DragComponent data={{ componentName: 'inputNumber' }} dragType={'copy'} />
-      <DragComponent data={{ componentName: 'input' }} dragType={'copy'} />
+    <div>
+      <Tabs defaultValue="base" orientation={'vertical'}>
+        <TabsList className="py-0  bg-transparent border-b rounded-none w-full justify-start">
+          <TabsTrigger
+            value="base"
+            className="h-9 !shadow-none !rounded-none border-b-transparent border-b data-[state=active]:border-primary"
+          >
+            基础
+          </TabsTrigger>
+          <TabsTrigger
+            value="advanced"
+            className="h-9 !shadow-none !rounded-none border-b-transparent border-b data-[state=active]:border-primary"
+          >
+            高级
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="base">
+          <div className="grid grid-cols-3 -mt-2">
+            <DragComponent data={{ componentName: 'button' }} dragType={'copy'} />
+            <DragComponent data={{ componentName: 'inputNumber' }} dragType={'copy'} />
+            <DragComponent data={{ componentName: 'input' }} dragType={'copy'} />
+          </div>
+        </TabsContent>
+        <TabsContent value="advanced"></TabsContent>
+      </Tabs>
     </div>
   );
 };

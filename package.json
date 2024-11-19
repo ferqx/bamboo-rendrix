@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "./play vite",
+    "build": "npm run build:components && npm run build:renderer && npm run build:canvas && npm run build:designer",
+    "build:components": "pnpm --filter ./packages/components run build",
+    "build:renderer": "pnpm --filter ./packages/renderer run build",
+    "build:canvas": "pnpm --filter ./packages/canvas run build",
+    "build:designer": "pnpm --filter ./packages/designer run build",
     "lint": "eslint ."
   },
   "dependencies": {
