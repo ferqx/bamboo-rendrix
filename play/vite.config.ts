@@ -13,7 +13,6 @@ const devAlias: AliasOptions = {
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
-  console.log('isProd', isProd);
   return {
     plugins: [react()],
     resolve: {

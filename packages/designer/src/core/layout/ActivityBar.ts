@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid';
 
-export interface ActiveBarItemOptions {
+export interface ActivityBarItemOptions {
   /**
    * 名称
    */
@@ -19,29 +19,29 @@ export interface ActiveBarItemOptions {
   icon: React.ComponentType;
 }
 
-export class ActiveBar {
+export class ActivityBar {
   /**
    * 活动视图
    */
-  readonly views: ActiveBarItem[] = [] as const;
+  readonly views: ActivityBarItem[] = [] as const;
   /**
    *  单个模式 - 隐藏活动状态栏和close按钮，默认显示第一个活动状态栏
    */
   singleMode = false;
 
-  constructor(items: ActiveBarItemOptions[]) {
-    this.views = items.map((item) => new ActiveBarItem(item, this));
+  constructor(items: ActivityBarItemOptions[]) {
+    this.views = items.map((item) => new ActivityBarItem(item, this));
   }
 
   /**
    * 添加活动视图
    */
-  add(options: ActiveBarItemOptions) {
-    this.views.push(new ActiveBarItem(options, this));
+  add(options: ActivityBarItemOptions) {
+    this.views.push(new ActivityBarItem(options, this));
   }
 }
 
-export class ActiveBarItem {
+export class ActivityBarItem {
   id: string;
   /**
    * 名称
@@ -60,13 +60,13 @@ export class ActiveBarItem {
    */
   icon: React.ComponentType<any>;
 
-  parent: ActiveBar;
+  parent: ActivityBar;
 
   get index() {
     return this.parent.views.indexOf(this);
   }
 
-  constructor(options: ActiveBarItemOptions, parent: ActiveBar) {
+  constructor(options: ActivityBarItemOptions, parent: ActivityBar) {
     this.id = uuid();
     this.name = options.name;
     this.component = options.component;

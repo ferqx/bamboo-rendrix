@@ -1,15 +1,18 @@
 import React from 'react';
 import { v1 as uuid } from 'uuid';
 
+export type ActionPlacement = 'topRight' | 'leftBottom';
+
 export interface ActionBarItemOptions {
+  name: string;
   /**
    * 组件
    */
   component: React.ComponentType;
   /**
-   * 方向
+   * 位置
    */
-  direction: 'left' | 'right';
+  placement: ActionPlacement;
 }
 
 export class ActionBar {
@@ -37,11 +40,13 @@ export class ActionBar {
 export class ActionBarItem implements ActionBarItemOptions {
   id: string | number;
 
+  name: string;
+
   component: React.ComponentType;
 
   parent: ActionBar;
 
-  direction: 'left' | 'right';
+  placement: ActionPlacement;
 
   get index() {
     return this.parent.actions.indexOf(this);
@@ -49,8 +54,9 @@ export class ActionBarItem implements ActionBarItemOptions {
 
   constructor(public options: ActionBarItemOptions, parent: ActionBar) {
     this.id = uuid();
+    this.name = options.name;
     this.component = options.component;
-    this.direction = options.direction;
+    this.placement = options.placement;
     this.parent = parent;
   }
 

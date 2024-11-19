@@ -1,4 +1,5 @@
 import Animate from 'tailwindcss-animate';
+import plugin from 'tailwindcss/plugin';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,7 +8,7 @@ export default {
     relative: true,
     files: ['./src/**/*.{js,ts,jsx,tsx}'],
   },
-  prefix: 'bm-',
+  prefix: '',
   theme: {
     container: {
       center: true,
@@ -73,5 +74,12 @@ export default {
       },
     },
   },
-  plugins: [Animate],
+  plugins: [
+    Animate,
+    plugin(function ({ addVariant }) {
+      addVariant('optional', '&:optional');
+      addVariant('hocus', ['&:hover', '&:focus']);
+      addVariant('inverted-colors', '@media (inverted-colors: inverted)');
+    }),
+  ],
 };

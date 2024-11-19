@@ -9,7 +9,7 @@ export default {
         relative: true,
         files: ['./src/**/*.{js,ts,jsx,tsx}'],
       },
-      prefix: 'bm-',
+      prefix: '',
       theme: {
         container: {
           center: true,

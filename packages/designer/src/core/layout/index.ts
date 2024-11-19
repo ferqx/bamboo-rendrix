@@ -1,4 +1,4 @@
 export * from './ActionBar';
-export * from './ActiveBar';
+export * from './ActivityBar';
 export * from './Layout';
 export * from './SideBar';
