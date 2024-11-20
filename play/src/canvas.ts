@@ -1,13 +1,13 @@
 import { createRenderer } from '@bamboo/designer';
 import { RenderSchema } from '@bamboo/protocol';
 import { Button, Input, InputNumber } from 'antd';
+import { install } from './components';
+import './canvas.css';
 
 const schema: RenderSchema = {
-  id: 1,
   componentName: 'div',
   children: [
     {
-      id: 2,
       componentName: 'div',
       props: {
         onClick: () => {
@@ -17,7 +17,6 @@ const schema: RenderSchema = {
       children: ['1'],
     },
     {
-      id: 3,
       componentName: 'button',
       props: {
         style: {
@@ -27,18 +26,27 @@ const schema: RenderSchema = {
       children: ['2'],
     },
     {
-      id: 4,
       componentName: 'input',
       props: {
         placeholder: '请输入',
       },
     },
     {
-      id: 5,
-      componentName: 'inputNumber',
-      props: {
-        placeholder: '请输入',
-      },
+      componentName: 'Row',
+      children: [
+        {
+          componentName: 'Col',
+          children: ['col1'],
+        },
+        {
+          componentName: 'Col',
+          children: ['col2'],
+        },
+        {
+          componentName: 'Col',
+          children: [],
+        },
+      ],
     },
   ],
 };
@@ -50,5 +58,7 @@ const renderer = createRenderer({
 renderer.componentManager.registerComponent('button', Button);
 renderer.componentManager.registerComponent('input', Input);
 renderer.componentManager.registerComponent('inputNumber', InputNumber);
+
+install(renderer);
 
 renderer.mount(document.getElementById('app')!);

@@ -5,6 +5,7 @@ import { DragWrappedComponentProps, withDrag } from './Drag';
 import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
 import { RendererContext } from './RendererProvider';
 import { useNextTick } from '../hooks/useNestTick';
+import { DropContainer } from './DropContainer';
 
 export interface MaterialComponentProps {
   [DRAG_ITEM_DATA_ID]: string | number;
@@ -51,9 +52,15 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
     );
   }
 
+  const isContainer = node.isContainer && node.children.length === 0;
+
   return (
     <Component {...mergedProps} {...(dragProps || {})}>
-      {node.children.length > 0 ? <RenderChildComponents nodes={node.children} /> : undefined}
+      {node.children.length > 0 ? (
+        <RenderChildComponents nodes={node.children} />
+      ) : isContainer ? (
+        <DropContainer node={node} />
+      ) : undefined}
     </Component>
   );
 }

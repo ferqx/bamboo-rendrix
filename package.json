@@ -2,7 +2,7 @@
   "name": "bamboo",
   "version": "0.0.0",
   "scripts": {
-    "dev": "./play vite",
+    "dev": "pnpm --filter ./play run dev",
     "build": "npm run build:components && npm run build:renderer && npm run build:canvas && npm run build:designer",
     "build:components": "pnpm --filter ./packages/components run build",
     "build:renderer": "pnpm --filter ./packages/renderer run build",

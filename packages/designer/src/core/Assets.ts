@@ -32,16 +32,4 @@ export class AssetsMange {
     }
     this.change?.(this.assets);
   }
-
-  /**
-   * 异步添加资产
-   */
-  async asyncAdd(fn: () => Promise<AssetSchema | AssetSchema[]>) {
-    if (typeof fn !== 'function') {
-      throw new Error('fn不是一个函数!');
-    }
-    const asset = await fn();
-    this.add(asset);
-    this.change?.(this.assets);
-  }
 }

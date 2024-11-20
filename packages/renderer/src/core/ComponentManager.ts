@@ -1,5 +1,5 @@
-import { builtComponents } from '../components/BuiltComponents';
 import { ComponentType } from 'react';
+import { builtComponents } from '../components/BuiltComponents';
 
 export interface ComponentMeta {
   name: string;
