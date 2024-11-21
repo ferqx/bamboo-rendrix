@@ -31,5 +31,9 @@
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
