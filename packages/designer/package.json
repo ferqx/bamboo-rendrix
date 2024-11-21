@@ -32,5 +32,9 @@
     "@bamboo/protocol": "workspace:^",
     "@bamboo/renderer": "workspace:^",
     "classnames": "^2.5.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
