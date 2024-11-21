@@ -5,6 +5,7 @@
   "files": [
     "dist"
   ],
+  "license": "MIT",
   "main": "./dist/bm-canvas.es.js",
   "module": "./dist/bm-canvas.umd.js",
   "types": "./dist/index.d.ts",

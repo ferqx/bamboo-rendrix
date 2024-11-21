@@ -5,6 +5,7 @@
   "files": [
     "dist"
   ],
+  "license": "MIT",
   "main": "./dist/bm-renderer.es.js",
   "module": "./dist/bm-renderer.umd.js",
   "types": "./dist/index.d.ts",

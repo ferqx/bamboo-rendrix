@@ -5,6 +5,7 @@
   "files": [
     "dist"
   ],
+  "license": "MIT",
   "main": "./dist/bm-designer.es.js",
   "module": "./dist/bm-designer.umd.js",
   "exports": {
