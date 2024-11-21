@@ -26,10 +26,10 @@
       "@/*": [
         "src/*"
       ],
-      "@bamboo/canvas": [
+      "@bamboo-code/canvas": [
         "../canvas/src/index.ts"
       ],
-      "@bamboo/renderer": [
+      "@bamboo-code/renderer": [
         "../renderer/src/index.ts"
       ],
     },

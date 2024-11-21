@@ -1,5 +1,5 @@
-@import '@bamboo/components/dist/style.css';
-@import '@bamboo/designer/dist/style.css';
+@import '@bamboo-code/components/dist/style.css';
+@import '@bamboo-code/designer/dist/style.css';
 
 @tailwind components;
 @tailwind utilities;

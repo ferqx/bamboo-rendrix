@@ -1,6 +1,6 @@
 import { type ComponentType } from 'react';
 import { v1 as uuid } from 'uuid';
-import { type RenderSchema } from '@bamboo/protocol';
+import { type RenderSchema } from '@bamboo-code/protocol';
 import { RootRenderNode } from './RootRenderNode';
 import { Renderer } from './Renderer';
 import { ChangeType, NodeChangeEvent, PropertyChange } from './NodeChange';

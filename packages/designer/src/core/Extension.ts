@@ -1,4 +1,4 @@
-import type { AssetSchema, MaterialSchema } from '@bamboo/protocol';
+import type { AssetSchema, MaterialSchema } from '@bamboo-code/protocol';
 import { type Designer } from './Designer';
 import { type Layout } from './layout';
 import { AssetsMange } from './Assets';

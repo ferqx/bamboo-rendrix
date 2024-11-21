@@ -1,5 +1,5 @@
-import { withDrag } from '@bamboo/renderer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@bamboo/components';
+import { withDrag } from '@bamboo-code/renderer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@bamboo-code/components';
 import { Square } from 'lucide-react';
 
 export const ComponentList = () => {

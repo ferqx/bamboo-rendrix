@@ -1,4 +1,4 @@
-import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo/protocol';
+import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo-code/protocol';
 import { RenderNode } from './RenderNode';
 import { RootRenderNode } from './RootRenderNode';
 import { ResourceManager } from './ResourceManager';

@@ -1,4 +1,4 @@
-@import '@bamboo/renderer/dist/style.css';
+@import '@bamboo-code/renderer/dist/style.css';
 
 @tailwind components;
 @tailwind utilities;

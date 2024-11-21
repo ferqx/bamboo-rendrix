@@ -1,5 +1,5 @@
 {
-  "name": "@bamboo/designer",
+  "name": "@bamboo-code/designer",
   "version": "0.0.1",
   "type": "module",
   "files": [
@@ -27,10 +27,10 @@
     "uuid": "^10.0.0"
   },
   "dependencies": {
-    "@bamboo/canvas": "workspace:^",
-    "@bamboo/components": "workspace:^",
-    "@bamboo/protocol": "workspace:^",
-    "@bamboo/renderer": "workspace:^",
+    "@bamboo-code/canvas": "workspace:^",
+    "@bamboo-code/components": "workspace:^",
+    "@bamboo-code/protocol": "workspace:^",
+    "@bamboo-code/renderer": "workspace:^",
     "classnames": "^2.5.1"
   },
   "publishConfig": {

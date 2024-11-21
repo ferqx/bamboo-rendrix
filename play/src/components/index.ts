@@ -1,6 +1,6 @@
 import * as Grid from './Grid';
-import { AssetSchema } from '@bamboo/protocol';
-import { Renderer } from '@bamboo/renderer';
+import { AssetSchema } from '@bamboo-code/protocol';
+import { Renderer } from '@bamboo-code/renderer';
 
 const assets: AssetSchema = {
   id: 'components',

@@ -13,8 +13,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'protocol',
-      fileName: (format) => `protocol.${format}.js`,
+      name: 'bmProtocol',
+      fileName: (format) => `bm-protocol.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
@@ -22,7 +22,7 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo/components': 'bambooComponents',
+          '@bamboo-code/components': 'BmComponents',
         },
       },
     },

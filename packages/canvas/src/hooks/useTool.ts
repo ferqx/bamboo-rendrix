@@ -1,5 +1,5 @@
-import { RenderSchema } from '@bamboo/protocol';
-import { ChangeType, DRAG_DATA, RenderNode, Renderer, RootRenderNode } from '@bamboo/renderer';
+import { RenderSchema } from '@bamboo-code/protocol';
+import { ChangeType, DRAG_DATA, RenderNode, Renderer, RootRenderNode } from '@bamboo-code/renderer';
 import { usePlaceholderTool } from './usePlaceholderTool';
 import { SelectorToolOptions, useSelectorTool } from './useSelectorTool';
 import { useHoverTool } from './useHoverTool';

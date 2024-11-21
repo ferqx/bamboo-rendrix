@@ -1,5 +1,5 @@
-import { CanvasComponent } from '@bamboo/canvas';
-import { TooltipProvider } from '@bamboo/components';
+import { CanvasComponent } from '@bamboo-code/canvas';
+import { TooltipProvider } from '@bamboo-code/components';
 import { LayoutComponent } from '../layout';
 import { Designer } from '@/core';
 

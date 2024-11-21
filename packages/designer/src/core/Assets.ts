@@ -1,4 +1,4 @@
-import { AssetSchema } from '@bamboo/protocol';
+import { AssetSchema } from '@bamboo-code/protocol';
 import { MaterialMange } from './Material';
 
 /**

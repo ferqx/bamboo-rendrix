@@ -1,4 +1,4 @@
-import { Renderer } from '@bamboo/renderer';
+import { Renderer } from '@bamboo-code/renderer';
 import { CanvasToolOptions, useTool } from '../hooks';
 
 export interface CanvasOptions {

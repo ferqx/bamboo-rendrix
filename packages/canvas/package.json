@@ -1,5 +1,5 @@
 {
-  "name": "@bamboo/canvas",
+  "name": "@bamboo-code/canvas",
   "version": "0.0.1",
   "type": "module",
   "files": [
@@ -28,9 +28,9 @@
     "classnames": "^2.5.1"
   },
   "devDependencies": {
-    "@bamboo/components": "workspace:^",
-    "@bamboo/protocol": "workspace:^",
-    "@bamboo/renderer": "workspace:^",
+    "@bamboo-code/components": "workspace:^",
+    "@bamboo-code/protocol": "workspace:^",
+    "@bamboo-code/renderer": "workspace:^",
     "classnames": "^2.5.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"

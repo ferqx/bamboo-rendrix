@@ -1,4 +1,4 @@
-import { RenderNode } from '@bamboo/renderer';
+import { RenderNode } from '@bamboo-code/renderer';
 import React, { useEffect, useRef, useState } from 'react';
 
 export interface SelectorToolState {

@@ -100,13 +100,13 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@bamboo/components':
+      '@bamboo-code/components':
         specifier: workspace:^
         version: link:../components
-      '@bamboo/protocol':
+      '@bamboo-code/protocol':
         specifier: workspace:^
         version: link:../protocol
-      '@bamboo/renderer':
+      '@bamboo-code/renderer':
         specifier: workspace:^
         version: link:../renderer
       classnames:
@@ -229,16 +229,16 @@ importers:
 
   packages/designer:
     dependencies:
-      '@bamboo/canvas':
+      '@bamboo-code/canvas':
         specifier: workspace:^
         version: link:../canvas
-      '@bamboo/components':
+      '@bamboo-code/components':
         specifier: workspace:^
         version: link:../components
-      '@bamboo/protocol':
+      '@bamboo-code/protocol':
         specifier: workspace:^
         version: link:../protocol
-      '@bamboo/renderer':
+      '@bamboo-code/renderer':
         specifier: workspace:^
         version: link:../renderer
       classnames:
@@ -274,7 +274,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@bamboo/protocol':
+      '@bamboo-code/protocol':
         specifier: workspace:^
         version: link:../protocol
       lodash-es:
@@ -283,10 +283,10 @@ importers:
 
   play:
     dependencies:
-      '@bamboo/components':
+      '@bamboo-code/components':
         specifier: workspace:^
         version: link:../packages/components
-      '@bamboo/designer':
+      '@bamboo-code/designer':
         specifier: workspace:^
         version: link:../packages/designer
       antd:

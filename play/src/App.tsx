@@ -1,4 +1,4 @@
-import { DesignerComponent, useDesigner } from '@bamboo/designer';
+import { DesignerComponent, useDesigner } from '@bamboo-code/designer';
 import componentList from './extensions/component-list';
 import { assets } from './components';
 

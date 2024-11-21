@@ -1,4 +1,4 @@
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo/components';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo-code/components';
 import { LifeBuoy, Share, SquareUser, Triangle, X } from 'lucide-react';
 import classNames from 'classnames';
 import { Layout } from '../core';

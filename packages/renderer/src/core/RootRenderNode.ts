@@ -1,4 +1,4 @@
-import { type RenderSchema } from '@bamboo/protocol';
+import { type RenderSchema } from '@bamboo-code/protocol';
 import { RenderNode } from './RenderNode';
 import { Renderer } from './Renderer';
 

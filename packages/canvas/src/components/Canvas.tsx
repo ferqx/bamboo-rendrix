@@ -1,4 +1,4 @@
-import type { Renderer } from '@bamboo/renderer';
+import type { Renderer } from '@bamboo-code/renderer';
 import { Hover } from './tool/Hover';
 import { Selector } from './tool/Selector';
 import { Placeholder } from './tool/Placeholder';
