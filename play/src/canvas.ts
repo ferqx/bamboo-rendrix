@@ -14,7 +14,6 @@ const schema: RenderSchema = {
           console.log('点击了');
         },
       },
-      children: ['1'],
     },
     {
       componentName: 'button',
@@ -23,7 +22,6 @@ const schema: RenderSchema = {
           width: '100%',
         },
       },
-      children: ['2'],
     },
     {
       componentName: 'input',
@@ -36,11 +34,9 @@ const schema: RenderSchema = {
       children: [
         {
           componentName: 'Col',
-          children: ['col1'],
         },
         {
           componentName: 'Col',
-          children: ['col2'],
         },
         {
           componentName: 'Col',

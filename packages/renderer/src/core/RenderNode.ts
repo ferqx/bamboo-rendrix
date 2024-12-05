@@ -3,7 +3,6 @@ import { type RenderSchema } from '@bamboo-code/types';
 import type { Renderer } from './Renderer';
 import type { PropertyChange } from './NodeChange';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
-import { RenderTextNode } from './RenderTextNode';
 import { MaterialNode } from './MaterialNode';
 
 /**
@@ -75,7 +74,7 @@ export class RenderNode extends MaterialNode {
     );
   }
 
-  children: (RenderNode | RenderTextNode)[] = [];
+  children: RenderNode[] = [];
 
   get index(): number {
     const index = this.parent?.children?.findIndex((item) => item?.id === this.id);
@@ -89,9 +88,6 @@ export class RenderNode extends MaterialNode {
     this.props = schema.props || {};
     this.parent = parent;
     this.children = (schema.children || []).map((item) => {
-      if (typeof item === 'string') {
-        return new RenderTextNode(item, this);
-      }
       return new RenderNode(item as RenderSchema | RenderNode, this);
     });
     this.initMaterial(this.renderer?.materials.find((item) => item.componentName === this.componentName));
@@ -225,9 +221,6 @@ export class RenderNode extends MaterialNode {
       componentName: this.componentName,
       props: { ...this.props, style: { ...(this.props?.style || {}) } },
       children: this.children.map((item) => {
-        if (item instanceof RenderTextNode) {
-          return item.text;
-        }
         return item.toSchema();
       }),
     };

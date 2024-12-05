@@ -3,7 +3,6 @@ import { useNextTick } from '../hooks';
 import { DropContainer } from './DropContainer';
 import { RendererContext } from './RendererProvider';
 import type { RenderNode } from '../core';
-import { RenderTextNode } from '../core';
 import type { DragWrappedComponentProps } from './Drag';
 import { withDrag } from './Drag';
 import { isFragmentComponent, transformStyle } from '../utils';
@@ -68,15 +67,12 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
   );
 }
 
-const RenderChildComponents = ({ nodes }: { nodes: (RenderNode | RenderTextNode)[] }) => {
+const RenderChildComponents = ({ nodes }: { nodes: RenderNode[] }) => {
   const options = useContext(RendererContext);
 
   return (
     <>
       {nodes.map((item) => {
-        if (item instanceof RenderTextNode) {
-          return item.text;
-        }
         return options?.isPreview ? (
           <RenderComponent key={item.id} node={item} />
         ) : (
