@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.js
+tailwind.config.js
+postcss.config.js
+vite.config.ts
+*.d.ts

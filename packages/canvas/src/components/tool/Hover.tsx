@@ -1,4 +1,4 @@
-import { HoverToolState } from '../../hooks/useHoverTool';
+import type { HoverToolState } from '../../hooks/useHoverTool';
 
 export interface HoverProps {
   state: HoverToolState;

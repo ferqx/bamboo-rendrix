@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { v1 as uuid } from 'uuid';
 
 export type ActionPlacement = 'topRight' | 'leftBottom';
@@ -52,7 +52,10 @@ export class ActionBarItem implements ActionBarItemOptions {
     return this.parent.actions.indexOf(this);
   }
 
-  constructor(public options: ActionBarItemOptions, parent: ActionBar) {
+  constructor(
+    public options: ActionBarItemOptions,
+    parent: ActionBar,
+  ) {
     this.id = uuid();
     this.name = options.name;
     this.component = options.component;

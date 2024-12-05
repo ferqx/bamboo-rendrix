@@ -1,4 +1,5 @@
-import { ComponentType } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ComponentType } from 'react';
 import { builtComponents } from '../components/BuiltComponents';
 
 export interface ComponentMeta {

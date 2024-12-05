@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 export type Position = 'left' | 'right' | 'top' | 'bottom' | 'center';
 

@@ -1,4 +1,4 @@
-import { Canvas, CanvasOptions } from '@bamboo-code/canvas';
+import type { Canvas, CanvasOptions } from '@bamboo-code/canvas';
 import { Layout } from './layout';
 import { MaterialMange } from './Material';
 import { AssetsMange } from './Assets';

@@ -1,4 +1,4 @@
-import { IDisposable } from './Disposable';
+import type { IDisposable } from './Disposable';
 import { DisposableStore } from './DisposableStore';
 import { EventEmitter } from './EventEmitter';
 

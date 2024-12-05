@@ -1,12 +1,19 @@
 import * as Grid from './Grid';
-import { AssetSchema } from '@bamboo-code/protocol';
-import { Renderer } from '@bamboo-code/renderer';
+import type { AssetSchema } from '@bamboo-code/types';
+import type { Renderer } from '@bamboo-code/renderer';
+import { Page } from './Page';
 
 const assets: AssetSchema = {
-  id: 'components',
-  name: '组件库',
+  id: 'BuiltComponents',
+  name: '内置组件',
   version: '0.0.1',
   components: [
+    {
+      name: '页面',
+      componentName: 'Page',
+      isContainer: true,
+      disableOperation: ['all'],
+    },
     {
       name: '栅格行',
       componentName: 'Row',
@@ -15,6 +22,7 @@ const assets: AssetSchema = {
       name: '栅格列',
       componentName: 'Col',
       isContainer: true,
+      allowToParents: ['Row'],
     },
   ],
 };
@@ -22,6 +30,7 @@ const assets: AssetSchema = {
 const install = (renderer: Renderer) => {
   renderer.componentManager.registerComponent('Col', Grid.Col);
   renderer.componentManager.registerComponent('Row', Grid.Row);
+  renderer.componentManager.registerComponent('Page', Page);
 };
 
 export { install, assets };

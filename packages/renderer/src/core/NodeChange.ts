@@ -1,5 +1,4 @@
-import { RenderNode } from './RenderNode';
-import { RootRenderNode } from './RootRenderNode';
+import type { RenderNode } from './RenderNode';
 
 export enum ChangeType {
   ADD = 'add',
@@ -27,22 +26,22 @@ export class NodeChangeEvent {
   /**
    * 当前操作节点
    */
-  node: RenderNode | RootRenderNode;
+  node: RenderNode;
 
   /**
    * 当前节点的父节点
    */
-  parent: RenderNode | RootRenderNode | null;
+  parent: RenderNode | null;
 
   /**
    * 旧节点（替换、复制、移动时使用）
    */
-  oldNode: RenderNode | RootRenderNode | null;
+  oldNode: RenderNode | null;
 
   /**
    * 旧的父节点（移动时使用）
    */
-  oldParent: RenderNode | RootRenderNode | null;
+  oldParent: RenderNode | null;
 
   /**
    * 属性变更信息
@@ -51,10 +50,10 @@ export class NodeChangeEvent {
 
   constructor(
     type: ChangeType,
-    node: RenderNode | RootRenderNode,
-    parent: RenderNode | RootRenderNode | null = null,
-    oldNode: RenderNode | RootRenderNode | null = null,
-    oldParent: RenderNode | RootRenderNode | null = null,
+    node: RenderNode,
+    parent: RenderNode | null = null,
+    oldNode: RenderNode | null = null,
+    oldParent: RenderNode | null = null,
     propChanges: PropertyChange[] | null = null,
   ) {
     this.type = type;

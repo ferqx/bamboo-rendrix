@@ -1,5 +1,5 @@
 import { useTool } from './useTool';
-import { CanvasOptions } from '../core';
+import type { CanvasOptions } from '../core';
 
 export function useCanvas(options: CanvasOptions) {
   const tool = useTool(options.tool);

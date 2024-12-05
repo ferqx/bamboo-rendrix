@@ -1,10 +1,8 @@
-import { type ComponentType } from 'react';
 import { v1 as uuid } from 'uuid';
-import { type RenderSchema } from '@bamboo-code/protocol';
-import { RootRenderNode } from './RootRenderNode';
-import { Renderer } from './Renderer';
-import { ChangeType, NodeChangeEvent, PropertyChange } from './NodeChange';
-import { RenderTextNode } from './RenderTextNode';
+import { type RenderSchema } from '@bamboo-code/types';
+import type { Renderer } from './Renderer';
+import type { PropertyChange } from './NodeChange';
+import { ChangeType, NodeChangeEvent } from './NodeChange';
 
 /**
  * 渲染节点
@@ -12,27 +10,94 @@ import { RenderTextNode } from './RenderTextNode';
 export class RenderNode {
   id: string | number;
 
+  private _name = '';
+
+  set name(value) {
+    this._name = value;
+  }
+
   get name() {
-    return this.material?.name || this.componentName;
+    if (this.material) {
+      return this.material.name;
+    }
+    return this._name || this.componentName;
   }
 
   componentName: string;
 
   props: Record<string, unknown>;
 
-  parent?: RenderNode | RootRenderNode;
+  parent?: RenderNode;
+
+  private _renderer: Renderer | undefined;
+
+  set renderer(renderer: Renderer) {
+    this._renderer = renderer;
+  }
+
+  get renderer(): Renderer | undefined {
+    if (this._renderer) {
+      return this._renderer;
+    }
+    let current = this.parent;
+    while (current) {
+      if (current?.renderer) {
+        return (this._renderer = current.renderer);
+      }
+      current = current?.parent;
+    }
+  }
 
   get el(): HTMLElement | null {
     return window.document.querySelector(`[data-id="${this.id}"]`);
   }
 
-  private _component: ComponentType<any> | undefined;
-
   get component() {
-    if (this._component) {
-      return this._component;
-    }
-    return (this._component = this.renderer?.componentManager.getComponent(this.componentName));
+    return this.renderer?.componentManager.getComponent(this.componentName);
+  }
+
+  get material() {
+    return this.renderer?.materials.find((item) => item.componentName === this.componentName);
+  }
+
+  public get manifest() {
+    return this.material?.manifest;
+  }
+
+  public get allowChoice(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('choice');
+  }
+
+  public get allowDelete(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('delete');
+  }
+
+  public get allowMove(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('move');
+  }
+
+  public get allowCopy(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('copy');
+  }
+
+  public get disableAll(): boolean {
+    return !!this.material?.disableOperation?.includes('all');
+  }
+
+  public get isContainer(): boolean {
+    return !!this.material?.isContainer;
+  }
+
+  public get childLimit(): number {
+    return this.material?.childLimit || Number.MAX_VALUE;
+  }
+
+  public get allowToParents(): string[] {
+    return this.material?.allowToParents || [];
+  }
+
+  public get allowChildren(): string[] {
+    return this.material?.allowChildren || [];
   }
 
   /**
@@ -52,101 +117,10 @@ export class RenderNode {
     );
   }
 
-  /**
-   * 资源信息
-   */
-  get manifest() {
-    return this.material?.manifest;
-  }
-
-  /**
-   * 允许选择
-   */
-  get allowChoice() {
-    return !this.disableAll && !this.material?.disableOperation?.includes('choice');
-  }
-
-  /**
-   * 允许删除
-   */
-  get allowDelete() {
-    return !this.disableAll && !this.material?.disableOperation?.includes('delete');
-  }
-
-  /**
-   * 允许移动
-   */
-  get allowMove() {
-    return !this.disableAll && !this.material?.disableOperation?.includes('move');
-  }
-
-  /**
-   * 允许复制
-   */
-  get allowCopy() {
-    return !this.disableAll && !this.material?.disableOperation?.includes('copy');
-  }
-
-  /**
-   * 禁止所有操作
-   */
-  get disableAll() {
-    return this.material?.disableOperation?.includes('all');
-  }
-
-  children: (RenderNode | RenderTextNode)[] = [];
-
-  get isContainer() {
-    return !!this.material?.isContainer;
-  }
-
-  private _childLimit = Number.MAX_SAFE_INTEGER;
-
-  /**
-   * 子组件数量限制
-   */
-  get childLimit() {
-    return this.material?.childLimit || this._childLimit;
-  }
-
-  set childLimit(value: number) {
-    this._childLimit = value;
-  }
-
-  /**
-   * 允许拖入到的父节点
-   */
-  get allowToParents() {
-    return this.material?.allowToParents;
-  }
-
-  /**
-   * 允许拖入的子节点
-   */
-  get allowChildren() {
-    return this.material?.allowChildren;
-  }
-
-  /**
-   * 组件的物料信息
-   * 不建议直接读取该属性值用于判断操作，建议封装一个方法用于判断操作
-   */
-  get material() {
-    return this.renderer?.materials.find((item) => item.componentName === this.componentName);
-  }
-
-  get renderer(): Renderer | undefined {
-    let parent = this.parent;
-    while (parent) {
-      if (parent.renderer) {
-        return parent.renderer;
-      }
-      parent = parent.parent;
-    }
-  }
+  children: RenderNode[] = [];
 
   get index(): number {
-    const index = this.parent?.children?.findIndex((item) => (item as RootRenderNode)?.id === this.id);
+    const index = this.parent?.children?.findIndex((item) => item?.id === this.id);
     return typeof index === 'number' ? index : -1;
   }
 
@@ -154,13 +128,10 @@ export class RenderNode {
     this.id = schema.id || uuid();
     this.componentName = schema.componentName;
     this.props = schema.props || {};
+    this.parent = parent;
     this.children = (schema.children || []).map((item) => {
-      if (typeof item === 'string') {
-        return new RenderTextNode(item, this);
-      }
       return new RenderNode(item as RenderSchema | RenderNode, this);
     });
-    this.parent = parent;
   }
 
   /**
@@ -291,9 +262,6 @@ export class RenderNode {
       componentName: this.componentName,
       props: { ...this.props, style: { ...(this.props?.style || {}) } },
       children: this.children.map((item) => {
-        if (item instanceof RenderTextNode) {
-          return item.text;
-        }
         return item.toSchema();
       }),
     };

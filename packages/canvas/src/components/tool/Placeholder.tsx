@@ -1,4 +1,4 @@
-import { PlaceholderToolState } from '../../hooks/usePlaceholderTool';
+import type { PlaceholderToolState } from '../../hooks/usePlaceholderTool';
 
 export interface HoverProps {
   state: PlaceholderToolState;

@@ -1,5 +1,5 @@
-import { AssetSchema } from '@bamboo-code/protocol';
-import { MaterialMange } from './Material';
+import type { AssetSchema } from '@bamboo-code/types';
+import type { MaterialMange } from './Material';
 
 /**
  * 远程资产管理

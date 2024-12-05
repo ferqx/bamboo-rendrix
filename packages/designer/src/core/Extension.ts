@@ -1,8 +1,8 @@
-import type { AssetSchema, MaterialSchema } from '@bamboo-code/protocol';
+import type { AssetSchema, MaterialSchema } from '@bamboo-code/types';
 import { type Designer } from './Designer';
 import { type Layout } from './layout';
-import { AssetsMange } from './Assets';
-import { MaterialMange } from './Material';
+import type { AssetsMange } from './Assets';
+import type { MaterialMange } from './Material';
 
 export interface ExtensionApi {
   addActivityBar: Layout['activityBar']['add'];
@@ -45,7 +45,10 @@ function getExtensionAPI(designer: Designer): ExtensionApi {
 export class ExtensionManage {
   private extensionMap = new Map<string, ExtensionFn>();
 
-  constructor(private designer: Designer, objs: ExtensionInstallConfig[]) {
+  constructor(
+    private designer: Designer,
+    objs: ExtensionInstallConfig[],
+  ) {
     objs.forEach((item) => {
       this.registerExtension(item.name, item.install);
     });

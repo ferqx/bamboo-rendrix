@@ -33,7 +33,12 @@ export function useHoverTool() {
       return;
     }
 
-    let { y, x, height, width } = target.getBoundingClientRect();
+    const rect = target.getBoundingClientRect();
+
+    const x = rect.x;
+    const y = rect.y;
+    const height = rect.height;
+    let { width } = rect;
 
     const _x = x < 0 ? 0 : x;
 
@@ -45,8 +50,6 @@ export function useHoverTool() {
     } else if (x + width > target.ownerDocument.body.offsetWidth) {
       // 超出最右
       width = x + width > target.ownerDocument.body.offsetWidth ? target.ownerDocument.body.offsetWidth - x : width;
-    } else {
-      width = width;
     }
 
     setState((pervState) => ({ ...pervState, x: _x, y: _y, width, height, visible: true }));

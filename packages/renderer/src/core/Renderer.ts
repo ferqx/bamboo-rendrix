@@ -1,23 +1,20 @@
-import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo-code/protocol';
+import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo-code/types';
 import { RenderNode } from './RenderNode';
-import { RootRenderNode } from './RootRenderNode';
 import { ResourceManager } from './ResourceManager';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
-import { DisposableStore, EventEmitter, IDisposable } from './event';
+import type { IDisposable } from './event';
+import { DisposableStore, EventEmitter } from './event';
 import { ComponentManager } from './ComponentManager';
-import { createRoot, Root } from 'react-dom/client';
+import type { Root } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { RendererComponent } from '../components/RendererComponent';
-import { nextTick } from '../hooks/useNestTick';
+import { nextTick } from '../hooks/useNextTick';
 
 export interface RendererOptions {
   /**
    * 组件结构
    */
-  schema: RenderSchema;
-  /**
-   * 节点数量限制
-   */
-  limit?: number;
+  schema: RenderSchema[];
   /**
    * 是否预览模式 - 预览模式下不允许拖拽
    */
@@ -33,7 +30,7 @@ export interface RendererOptions {
  * 渲染器实例
  */
 export class Renderer {
-  rootNode: RootRenderNode;
+  nodes!: RenderNode[];
 
   rootApp!: Root;
 
@@ -114,12 +111,19 @@ export class Renderer {
   materials: MaterialSchema[] = [];
 
   constructor(public options: RendererOptions) {
-    const { assets, schema, limit, isPreview } = options;
+    const { assets, isPreview } = options;
     this.assets = isPreview ? assets || [] : [];
     this.resourceManager = new ResourceManager();
     this.componentManager = new ComponentManager();
-    this.rootNode = new RootRenderNode(schema, this);
-    this.rootNode.childLimit = limit || Number.MAX_SAFE_INTEGER;
+    this.createRootNode(this.options.schema);
+  }
+
+  createRootNode(schema: RenderSchema[]) {
+    this.nodes = schema.map((item) => {
+      const node = new RenderNode(item);
+      node.renderer = this;
+      return node;
+    });
   }
 
   mount(el: HTMLElement) {
@@ -128,12 +132,11 @@ export class Renderer {
       return;
     }
     this.rootApp = createRoot(el);
-    this.rootApp.render(RendererComponent(this));
+    this.rootApp.render(RendererComponent({ renderer: this }));
   }
 
-  reload(schema: RenderSchema) {
-    this.rootNode = new RootRenderNode(schema, this);
-    this.rootNode.childLimit = this.options.limit || Number.MAX_SAFE_INTEGER;
+  reload(schema: RenderSchema[]) {
+    this.createRootNode(schema);
     this.triggerReloadChange();
   }
 
@@ -155,43 +158,35 @@ export class Renderer {
    * TODO: 遍历算法可重用
    */
   getNodeById(id: string | number) {
-    const queque: (RootRenderNode | RenderNode)[] = [this.rootNode];
+    const queque: RenderNode[] = [...this.nodes];
 
     while (queque.length > 0) {
       const curNode = queque.shift();
 
-      if (String(curNode?.id || '') === String(id)) {
+      if (curNode && curNode.id === id) {
         return curNode;
       }
 
-      curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode) {
-          queque.push(child);
-        }
-      });
+      curNode?.children && queque.push(...curNode.children);
     }
   }
 
   /**
    * TODO: 遍历算法可重用
    */
-  getNodeByElement(el: HTMLElement): RootRenderNode | RenderNode | undefined {
-    const queque: (RootRenderNode | RenderNode)[] = [this.rootNode];
+  getNodeByElement(el: HTMLElement): RenderNode | undefined {
+    const queque: RenderNode[] = [...this.nodes];
 
     while (queque.length > 0 && el) {
       const curNode = queque.shift();
 
       const id = el.getAttribute('data-id');
 
-      if (String(curNode?.id || '') === String(id)) {
+      if (curNode && String(curNode.id) === id) {
         return curNode;
       }
 
-      curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode) {
-          queque.push(child);
-        }
-      });
+      curNode?.children && queque.push(...curNode.children);
     }
   }
 

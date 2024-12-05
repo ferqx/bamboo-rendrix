@@ -1,15 +1,14 @@
 import { useMemo } from 'react';
 import classNames from 'classnames';
 import { Trash2 } from 'lucide-react';
-import {} from '@bamboo-code/components';
-import { SelectorToolOptions, SelectorToolState } from '../../hooks';
+import type { SelectorToolOptions, SelectorToolState } from '../../hooks';
 
 export interface SelectorToolProps {
   state: SelectorToolState;
   options?: SelectorToolOptions;
 }
 
-export const Selector = ({ state, options }: SelectorToolProps) => {
+export const Selector = ({ state }: SelectorToolProps) => {
   const size = 24;
 
   const headerTop = useMemo(() => {
@@ -23,20 +22,20 @@ export const Selector = ({ state, options }: SelectorToolProps) => {
     return top - 10 < 0;
   }, [state.y]);
 
-  const isFooterTop = useMemo(() => {
-    const height =
-      state.selectedNode?.renderer?.window.innerHeight ||
-      (document.querySelector('.bm-canvas') as HTMLElement)?.offsetHeight ||
-      0;
-    const bottom = state.y + state.height + size;
-    return bottom + 10 >= height;
-  }, [state.selectedNode, state.y, state.height]);
+  // const isFooterTop = useMemo(() => {
+  //   const height =
+  //     state.selectedNode?.renderer?.window.innerHeight ||
+  //     (document.querySelector('.bm-canvas') as HTMLElement)?.offsetHeight ||
+  //     0;
+  //   const bottom = state.y + state.height + size;
+  //   return bottom + 10 >= height;
+  // }, [state.selectedNode, state.y, state.height]);
 
-  const footerTop = useMemo(() => {
-    const top = state.y - size + 2;
-    const bottom = state.y + state.height - 2;
-    return isFooterTop ? top : bottom;
-  }, [state.y, state.height]);
+  // const footerTop = useMemo(() => {
+  //   const top = state.y - size + 2;
+  //   const bottom = state.y + state.height - 2;
+  //   return isFooterTop ? top : bottom;
+  // }, [state.y, state.height]);
 
   return (
     <>

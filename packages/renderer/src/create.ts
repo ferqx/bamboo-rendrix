@@ -1,4 +1,5 @@
-import { Renderer, RendererOptions } from './core';
+import type { RendererOptions } from './core';
+import { Renderer } from './core';
 
 /**
  * 发送事件通知
@@ -16,6 +17,7 @@ const sendEventNotice = (renderer: Renderer) => {
  */
 export const createRenderer = (options: RendererOptions) => {
   const renderer = new Renderer(options) as Renderer;
+  console.log('createRenderer', renderer);
   sendEventNotice(renderer);
   return renderer;
 };

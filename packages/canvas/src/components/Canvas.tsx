@@ -4,7 +4,8 @@ import { Selector } from './tool/Selector';
 import { Placeholder } from './tool/Placeholder';
 import { useTool } from '../hooks';
 import { Sandbox } from './Sandbox';
-import { Canvas, CanvasOptions } from '../core';
+import type { CanvasOptions } from '../core';
+import { Canvas } from '../core';
 import { useMemo } from 'react';
 
 export const CanvasComponent = ({ options }: { options: CanvasOptions }) => {

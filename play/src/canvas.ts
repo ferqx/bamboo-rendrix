@@ -1,55 +1,53 @@
 import { createRenderer } from '@bamboo-code/designer';
-import { RenderSchema } from '@bamboo-code/protocol';
+import type { RenderSchema } from '@bamboo-code/types';
 import { Button, Input, InputNumber } from 'antd';
 import { install } from './components';
 import './canvas.css';
 
-const schema: RenderSchema = {
-  componentName: 'div',
-  children: [
-    {
-      componentName: 'div',
-      props: {
-        onClick: () => {
-          console.log('点击了');
+const schema: RenderSchema[] = [
+  {
+    componentName: 'Page',
+    children: [
+      {
+        componentName: 'div',
+        props: {
+          onClick: () => {
+            console.log('点击了');
+          },
         },
       },
-      children: ['1'],
-    },
-    {
-      componentName: 'button',
-      props: {
-        style: {
-          width: '100%',
+      {
+        componentName: 'button',
+        props: {
+          style: {
+            width: '100%',
+          },
         },
       },
-      children: ['2'],
-    },
-    {
-      componentName: 'input',
-      props: {
-        placeholder: '请输入',
+      {
+        componentName: 'input',
+        props: {
+          placeholder: '请输入',
+        },
       },
-    },
-    {
-      componentName: 'Row',
-      children: [
-        {
-          componentName: 'Col',
-          children: ['col1'],
-        },
-        {
-          componentName: 'Col',
-          children: ['col2'],
-        },
-        {
-          componentName: 'Col',
-          children: [],
-        },
-      ],
-    },
-  ],
-};
+      {
+        componentName: 'Row',
+        children: [
+          {
+            componentName: 'Col',
+          },
+          {
+            componentName: 'Col',
+          },
+          {
+            componentName: 'Col',
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const renderer = createRenderer({
   schema,

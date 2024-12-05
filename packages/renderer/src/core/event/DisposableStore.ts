@@ -1,4 +1,4 @@
-import { IDisposable } from './Disposable';
+import type { IDisposable } from './Disposable';
 
 export class DisposableStore implements IDisposable {
   private disposables: IDisposable[] = [];

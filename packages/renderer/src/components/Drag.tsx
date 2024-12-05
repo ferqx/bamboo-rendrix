@@ -1,5 +1,5 @@
 import React from 'react';
-import { RenderSchema } from '@bamboo-code/protocol';
+import type { RenderSchema } from '@bamboo-code/types';
 import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME, DRAG_DATA } from '../constant';
 import { RenderNode } from '../core';
 
@@ -18,7 +18,7 @@ export interface DragWrappedComponentProps {
 /**
  * 高阶组件
  */
-export const withDrag = (WrappedComponent: React.ComponentType<any>) => {
+export const withDrag = (WrappedComponent: React.ComponentType<DragWrappedComponentProps>) => {
   return ({ data, dragType, children }: DragProps) => {
     /**
      * 无渲染组件 - 处理dnd逻辑

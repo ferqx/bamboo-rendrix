@@ -1,7 +1,7 @@
 import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo-code/components';
-import { LifeBuoy, Share, SquareUser, Triangle, X } from 'lucide-react';
+import { Triangle, X } from 'lucide-react';
 import classNames from 'classnames';
-import { Layout } from '../core';
+import type { Layout } from '../core';
 import { useActivityBar } from '../hooks';
 
 interface LayoutProps {

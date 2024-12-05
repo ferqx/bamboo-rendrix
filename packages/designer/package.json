@@ -29,7 +29,7 @@
   "dependencies": {
     "@bamboo-code/canvas": "workspace:^",
     "@bamboo-code/components": "workspace:^",
-    "@bamboo-code/protocol": "workspace:^",
+    "@bamboo-code/types": "workspace:^",
     "@bamboo-code/renderer": "workspace:^",
     "classnames": "^2.5.1"
   },

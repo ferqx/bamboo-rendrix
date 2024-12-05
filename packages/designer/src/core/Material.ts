@@ -1,4 +1,4 @@
-import type { MaterialSchema } from '@bamboo-code/protocol';
+import type { MaterialSchema } from '@bamboo-code/types';
 
 /**
  * 物料类 - 管理物料组件的信息

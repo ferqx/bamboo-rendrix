@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { RenderNode } from '../core';
+import type { RenderNode } from '../core';
 
 interface DropContainerProps {
   node: RenderNode;
