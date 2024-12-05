@@ -46,7 +46,10 @@ export class ActionBarItem {
     return this.parent.actions.indexOf(this);
   }
 
-  constructor(public options: ActionBarItemOptions, parent: ActionBar) {
+  constructor(
+    public options: ActionBarItemOptions,
+    parent: ActionBar,
+  ) {
     this.icon = options.icon;
     this.isButton = options.isButton;
     this.parent = parent;

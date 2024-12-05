@@ -8,7 +8,8 @@
     "build:renderer": "pnpm --filter ./packages/renderer run build",
     "build:canvas": "pnpm --filter ./packages/canvas run build",
     "build:designer": "pnpm --filter ./packages/designer run build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "fix": "eslint . --fix"
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
@@ -18,25 +19,32 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.3",
     "@eslint/js": "^9.9.0",
     "@types/lodash": "^4.17.10",
     "@types/node": "^22.2.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.9.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "5.1.0-rc-fb9a90fa48-20240614",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.11.0",
     "postcss": "^8.4.41",
+    "prettier": "^3.4.2",
     "sass": "^1.79.5",
     "tailwind-merge": "^2.5.0",
     "tailwindcss": "^3.4.10",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.0.1",
+    "typescript-eslint": "^8.8.1",
     "vite": "^5.4.9",
     "vite-plugin-dts": "^4.2.4"
   }

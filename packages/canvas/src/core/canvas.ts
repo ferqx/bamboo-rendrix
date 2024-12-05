@@ -1,5 +1,5 @@
-import { Renderer } from '@bamboo-code/renderer';
-import { CanvasToolOptions, useTool } from '../hooks';
+import type { Renderer } from '@bamboo-code/renderer';
+import type { CanvasToolOptions, useTool } from '../hooks';
 
 export interface CanvasOptions {
   load?: (iframeWindow: Window, canvas: Canvas) => void;
@@ -14,7 +14,10 @@ export class Canvas {
 
   tool!: ReturnType<typeof useTool>;
 
-  constructor(public options: CanvasOptions, renderer?: Renderer) {
+  constructor(
+    public options: CanvasOptions,
+    renderer?: Renderer,
+  ) {
     this.renderer = renderer;
   }
 

@@ -1,4 +1,5 @@
-import { Disposable, IDisposable } from './Disposable';
+import type { IDisposable } from './Disposable';
+import { Disposable } from './Disposable';
 
 export interface IEvent<T> {
   (listener: (e: T) => unknown, thisArgs?: unknown[]): IDisposable;

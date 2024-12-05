@@ -1,5 +1,6 @@
-import { RenderNode } from '@bamboo-code/renderer';
-import React, { useEffect, useRef, useState } from 'react';
+import type { RenderNode } from '@bamboo-code/renderer';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface SelectorToolState {
   x: number;
@@ -88,7 +89,11 @@ export function useSelectorTool(options?: SelectorToolOptions) {
       return;
     }
 
-    let { y, x, height, width } = targetElement.getBoundingClientRect();
+    const rect = targetElement.getBoundingClientRect();
+
+    const { x, y, height } = rect;
+
+    let { width } = rect;
 
     const _x = x < 0 ? 0 : x;
 
@@ -101,8 +106,6 @@ export function useSelectorTool(options?: SelectorToolOptions) {
         x + width > targetElement.ownerDocument.body.offsetWidth
           ? targetElement.ownerDocument.body.offsetWidth - x
           : width;
-    } else {
-      width = width;
     }
 
     setState((prevState) => ({

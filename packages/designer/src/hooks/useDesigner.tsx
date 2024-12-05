@@ -2,19 +2,21 @@ import { useMemo } from 'react';
 import { Designer, type DesignerOptions } from '../core';
 
 export function useDesigner(options: DesignerOptions) {
-  const _options: DesignerOptions = {
-    ...options,
-    canvas: {
-      ...options.canvas,
-      load(iframeWindow, canvas) {
-        designer.canvas = canvas;
-        load();
-        options.canvas.load?.(iframeWindow, canvas);
-      },
-    },
-  };
-
-  const designer = useMemo(() => new Designer(_options), []);
+  const designer = useMemo(
+    () =>
+      new Designer({
+        ...options,
+        canvas: {
+          ...options.canvas,
+          load(iframeWindow, canvas) {
+            designer.canvas = canvas;
+            load();
+            options.canvas.load?.(iframeWindow, canvas);
+          },
+        },
+      }),
+    [],
+  );
 
   const load = () => {
     if (!designer.renderer) {

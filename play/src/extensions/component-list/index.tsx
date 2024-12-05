@@ -1,4 +1,4 @@
-import { ExtensionApi } from '@bamboo-code/designer';
+import type { ExtensionApi } from '@bamboo-code/designer';
 import { Button } from '@bamboo-code/components';
 import { ComponentIcon, LifeBuoy, Save } from 'lucide-react';
 import { ComponentList } from './view';

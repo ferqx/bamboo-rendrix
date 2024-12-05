@@ -1,5 +1,5 @@
 import { createRenderer } from '@bamboo-code/designer';
-import { RenderSchema } from '@bamboo-code/protocol';
+import type { RenderSchema } from '@bamboo-code/types';
 import { Button, Input, InputNumber } from 'antd';
 import { install } from './components';
 import './canvas.css';

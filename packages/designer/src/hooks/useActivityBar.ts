@@ -1,4 +1,4 @@
-import { ActivityBarItem } from '../core';
+import type { ActivityBarItem } from '../core';
 import { useMemo, useState } from 'react';
 
 export function useActivityBar(activeBars: ActivityBarItem[]) {
@@ -6,7 +6,7 @@ export function useActivityBar(activeBars: ActivityBarItem[]) {
 
   const activatedBar = useMemo(() => {
     return activeBars.find((item) => item.id === state);
-  }, [state]);
+  }, [state, activeBars]);
 
   const activatedView = (value: string) => {
     setState(value);

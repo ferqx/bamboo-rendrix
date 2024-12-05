@@ -1,11 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
-import { RenderNode, RenderTextNode } from '../core';
-import { isFragmentComponent, transformStyle } from '../utils';
-import { DragWrappedComponentProps, withDrag } from './Drag';
-import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
-import { RendererContext } from './RendererProvider';
-import { useNextTick } from '../hooks/useNestTick';
+import { useNextTick } from '../hooks';
 import { DropContainer } from './DropContainer';
+import { RendererContext } from './RendererProvider';
+import type { RenderNode } from '../core';
+import { RenderTextNode } from '../core';
+import type { DragWrappedComponentProps } from './Drag';
+import { withDrag } from './Drag';
+import { isFragmentComponent, transformStyle } from '../utils';
+import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME } from '../constant';
 
 export interface MaterialComponentProps {
   [DRAG_ITEM_DATA_ID]: string | number;
@@ -45,11 +47,12 @@ function RenderComponent({ node, dragProps }: { node: RenderNode; dragProps?: Dr
 
   if (isFragmentComponent(<Component />)) {
     const FragmentComponent = Component;
-    Component = (props: MaterialComponentProps) => (
+    const FixFragmentComponent = (props: MaterialComponentProps) => (
       <div {...props}>
         <FragmentComponent {...node.props}>{props.children}</FragmentComponent>
       </div>
     );
+    Component = FixFragmentComponent;
   }
 
   const isContainer = node.isContainer && node.children.length === 0;
@@ -95,7 +98,7 @@ function RenderRootComponent({ node }: { node: RenderNode }) {
       setVersion((version) => (version === Number.MAX_VALUE ? 0 : version + 1));
     });
     return () => changeEvent?.dispose();
-  }, []);
+  });
 
   // 渲染器组件更新后触发
   useNextTick();

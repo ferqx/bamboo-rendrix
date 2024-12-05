@@ -1,10 +1,10 @@
 import * as Grid from './Grid';
-import { AssetSchema } from '@bamboo-code/protocol';
-import { Renderer } from '@bamboo-code/renderer';
+import type { AssetSchema } from '@bamboo-code/types';
+import type { Renderer } from '@bamboo-code/renderer';
 
 const assets: AssetSchema = {
-  id: 'components',
-  name: '组件库',
+  id: 'layout',
+  name: '布局组件',
   version: '0.0.1',
   components: [
     {
@@ -15,6 +15,7 @@ const assets: AssetSchema = {
       name: '栅格列',
       componentName: 'Col',
       isContainer: true,
+      allowToParents: ['Row'],
     },
   ],
 };

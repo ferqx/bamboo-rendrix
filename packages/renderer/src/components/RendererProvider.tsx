@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { RendererOptions } from '../core';
+import type { RendererOptions } from '../core';
 
 // 创建上下文
 export const RendererContext = createContext<RendererOptions | undefined>(undefined);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { v1 as uuid } from 'uuid';
 
 export interface ActivityBarItemOptions {

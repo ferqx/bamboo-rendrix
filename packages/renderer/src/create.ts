@@ -1,4 +1,5 @@
-import { Renderer, RendererOptions } from './core';
+import type { RendererOptions } from './core';
+import { Renderer } from './core';
 
 /**
  * 发送事件通知

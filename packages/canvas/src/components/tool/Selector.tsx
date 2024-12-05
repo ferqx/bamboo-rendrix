@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import classNames from 'classnames';
 import { Trash2 } from 'lucide-react';
 import {} from '@bamboo-code/components';
-import { SelectorToolOptions, SelectorToolState } from '../../hooks';
+import type { SelectorToolOptions, SelectorToolState } from '../../hooks';
 
 export interface SelectorToolProps {
   state: SelectorToolState;
