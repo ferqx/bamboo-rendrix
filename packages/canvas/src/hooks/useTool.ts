@@ -67,7 +67,7 @@ export function useTool(options?: CanvasToolOptions) {
 
       const dragData = JSON.parse(json) as RenderSchema;
 
-      const parentNode: RenderNode = targetNode.isContainer ? targetNode : targetNode.parent!;
+      const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
 
       const dragNode = isCopy ? new RenderNode(dragData, parentNode) : renderer.getNodeById(dragData.id!);
 
@@ -76,14 +76,18 @@ export function useTool(options?: CanvasToolOptions) {
       const { x, y } = e;
 
       // 判断节点是否可以拖入到目标节点之中
-      if (dragNode?.allowToParents?.length && !dragNode?.allowToParents.includes(parentNode.componentName)) {
+      if (
+        parentNode &&
+        dragNode?.allowToParents?.length &&
+        !dragNode?.allowToParents.includes(parentNode.componentName)
+      ) {
         e.dataTransfer!.dropEffect = 'none';
         clearState();
         return;
       }
 
       // 如果父节点存在子节点的数量限制
-      if (parentNode.children.length >= parentNode.childLimit) {
+      if (parentNode && parentNode.children.length >= parentNode.childLimit) {
         e.dataTransfer!.dropEffect = 'none';
         clearState();
         return;
@@ -155,7 +159,7 @@ export function useTool(options?: CanvasToolOptions) {
       const data: RenderSchema = JSON.parse(dragData);
 
       // 未来的父节点
-      const parentNode: RenderNode = targetNode.isContainer ? targetNode : targetNode.parent!;
+      const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
 
       const dragNode =
         e.dataTransfer?.effectAllowed === 'move'

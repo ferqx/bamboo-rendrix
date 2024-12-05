@@ -3,12 +3,11 @@ import { type RenderSchema } from '@bamboo-code/types';
 import type { Renderer } from './Renderer';
 import type { PropertyChange } from './NodeChange';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
-import { MaterialNode } from './MaterialNode';
 
 /**
  * 渲染节点
  */
-export class RenderNode extends MaterialNode {
+export class RenderNode {
   id: string | number;
 
   private _name = '';
@@ -57,6 +56,50 @@ export class RenderNode extends MaterialNode {
     return this.renderer?.componentManager.getComponent(this.componentName);
   }
 
+  get material() {
+    return this.renderer?.materials.find((item) => item.componentName === this.componentName);
+  }
+
+  public get manifest() {
+    return this.material?.manifest;
+  }
+
+  public get allowChoice(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('choice');
+  }
+
+  public get allowDelete(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('delete');
+  }
+
+  public get allowMove(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('move');
+  }
+
+  public get allowCopy(): boolean {
+    return !this.disableAll && !this.material?.disableOperation?.includes('copy');
+  }
+
+  public get disableAll(): boolean {
+    return !!this.material?.disableOperation?.includes('all');
+  }
+
+  public get isContainer(): boolean {
+    return !!this.material?.isContainer;
+  }
+
+  public get childLimit(): number {
+    return this.material?.childLimit || Number.MAX_VALUE;
+  }
+
+  public get allowToParents(): string[] {
+    return this.material?.allowToParents || [];
+  }
+
+  public get allowChildren(): string[] {
+    return this.material?.allowChildren || [];
+  }
+
   /**
    * 是否是异步组件
    */
@@ -82,7 +125,6 @@ export class RenderNode extends MaterialNode {
   }
 
   constructor(schema: RenderSchema | RenderNode, parent?: RenderNode) {
-    super();
     this.id = schema.id || uuid();
     this.componentName = schema.componentName;
     this.props = schema.props || {};
@@ -90,7 +132,6 @@ export class RenderNode extends MaterialNode {
     this.children = (schema.children || []).map((item) => {
       return new RenderNode(item as RenderSchema | RenderNode, this);
     });
-    this.initMaterial(this.renderer?.materials.find((item) => item.componentName === this.componentName));
   }
 
   /**

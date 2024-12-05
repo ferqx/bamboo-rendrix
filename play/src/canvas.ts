@@ -4,48 +4,50 @@ import { Button, Input, InputNumber } from 'antd';
 import { install } from './components';
 import './canvas.css';
 
-const schema: RenderSchema = {
-  componentName: 'div',
-  children: [
-    {
-      componentName: 'div',
-      props: {
-        onClick: () => {
-          console.log('点击了');
+const schema: RenderSchema[] = [
+  {
+    componentName: 'Page',
+    children: [
+      {
+        componentName: 'div',
+        props: {
+          onClick: () => {
+            console.log('点击了');
+          },
         },
       },
-    },
-    {
-      componentName: 'button',
-      props: {
-        style: {
-          width: '100%',
+      {
+        componentName: 'button',
+        props: {
+          style: {
+            width: '100%',
+          },
         },
       },
-    },
-    {
-      componentName: 'input',
-      props: {
-        placeholder: '请输入',
+      {
+        componentName: 'input',
+        props: {
+          placeholder: '请输入',
+        },
       },
-    },
-    {
-      componentName: 'Row',
-      children: [
-        {
-          componentName: 'Col',
-        },
-        {
-          componentName: 'Col',
-        },
-        {
-          componentName: 'Col',
-          children: [],
-        },
-      ],
-    },
-  ],
-};
+      {
+        componentName: 'Row',
+        children: [
+          {
+            componentName: 'Col',
+          },
+          {
+            componentName: 'Col',
+          },
+          {
+            componentName: 'Col',
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const renderer = createRenderer({
   schema,

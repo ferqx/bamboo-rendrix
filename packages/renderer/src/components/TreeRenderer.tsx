@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNextTick } from '../hooks';
 import { DropContainer } from './DropContainer';
 import { RendererContext } from './RendererProvider';
-import type { RenderNode } from '../core';
+import type { Renderer, RenderNode } from '../core';
 import type { DragWrappedComponentProps } from './Drag';
 import { withDrag } from './Drag';
 import { isFragmentComponent, transformStyle } from '../utils';
@@ -83,13 +83,13 @@ const RenderChildComponents = ({ nodes }: { nodes: RenderNode[] }) => {
   );
 };
 
-function RenderRootComponent({ node }: { node: RenderNode }) {
+function RenderRootComponent({ renderer }: { renderer: Renderer }) {
   const [state, setVersion] = useState(0); // 用于触发组件更新
 
   // TODO: 后续尝试局部 change 的优化
   useEffect(() => {
     // 设置更新回调，当 TreeNode 更新时触发组件的DOM更新
-    const changeEvent = node.renderer?.onNodeChange(() => {
+    const changeEvent = renderer.onNodeChange(() => {
       // 同步更新
       setVersion((version) => (version === Number.MAX_VALUE ? 0 : version + 1));
     });
@@ -99,17 +99,7 @@ function RenderRootComponent({ node }: { node: RenderNode }) {
   // 渲染器组件更新后触发
   useNextTick();
 
-  const props = {
-    [DRAG_ITEM_DATA_ID]: node.id,
-    className: 'renderer-root',
-    style: { height: '100%' } as React.CSSProperties,
-  };
-
-  return (
-    <div {...props}>
-      <RenderChildComponents nodes={node.children} />
-    </div>
-  );
+  return <RenderChildComponents nodes={renderer.nodes} />;
 }
 
 export default RenderRootComponent;

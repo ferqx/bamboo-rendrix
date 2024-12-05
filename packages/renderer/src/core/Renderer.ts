@@ -14,7 +14,7 @@ export interface RendererOptions {
   /**
    * 组件结构
    */
-  schema: RenderSchema;
+  schema: RenderSchema[];
   /**
    * 是否预览模式 - 预览模式下不允许拖拽
    */
@@ -30,7 +30,7 @@ export interface RendererOptions {
  * 渲染器实例
  */
 export class Renderer {
-  rootNode!: RenderNode;
+  nodes!: RenderNode[];
 
   rootApp!: Root;
 
@@ -118,12 +118,12 @@ export class Renderer {
     this.createRootNode(this.options.schema);
   }
 
-  createRootNode(schema: RenderSchema) {
-    this.rootNode = new RenderNode(schema);
-    this.rootNode.name = '页面';
-    this.rootNode.renderer = this;
-    this.rootNode.isContainer = true;
-    this.rootNode.childLimit = Number.MAX_SAFE_INTEGER;
+  createRootNode(schema: RenderSchema[]) {
+    this.nodes = schema.map((item) => {
+      const node = new RenderNode(item);
+      node.renderer = this;
+      return node;
+    });
   }
 
   mount(el: HTMLElement) {
@@ -132,10 +132,10 @@ export class Renderer {
       return;
     }
     this.rootApp = createRoot(el);
-    this.rootApp.render(RendererComponent(this));
+    this.rootApp.render(RendererComponent({ renderer: this }));
   }
 
-  reload(schema: RenderSchema) {
+  reload(schema: RenderSchema[]) {
     this.createRootNode(schema);
     this.triggerReloadChange();
   }
@@ -158,20 +158,16 @@ export class Renderer {
    * TODO: 遍历算法可重用
    */
   getNodeById(id: string | number) {
-    const queque: RenderNode[] = [this.rootNode];
+    const queque: RenderNode[] = [...this.nodes];
 
     while (queque.length > 0) {
       const curNode = queque.shift();
 
-      if (String(curNode?.id || '') === String(id)) {
+      if (curNode && curNode.id === id) {
         return curNode;
       }
 
-      curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode) {
-          queque.push(child);
-        }
-      });
+      curNode?.children && queque.push(...curNode.children);
     }
   }
 
@@ -179,22 +175,18 @@ export class Renderer {
    * TODO: 遍历算法可重用
    */
   getNodeByElement(el: HTMLElement): RenderNode | undefined {
-    const queque: RenderNode[] = [this.rootNode];
+    const queque: RenderNode[] = [...this.nodes];
 
     while (queque.length > 0 && el) {
       const curNode = queque.shift();
 
       const id = el.getAttribute('data-id');
 
-      if (String(curNode?.id || '') === String(id)) {
+      if (curNode && String(curNode.id) === id) {
         return curNode;
       }
 
-      curNode?.children.forEach((child) => {
-        if (child instanceof RenderNode) {
-          queque.push(child);
-        }
-      });
+      curNode?.children && queque.push(...curNode.children);
     }
   }
 

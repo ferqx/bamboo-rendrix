@@ -17,6 +17,7 @@ const sendEventNotice = (renderer: Renderer) => {
  */
 export const createRenderer = (options: RendererOptions) => {
   const renderer = new Renderer(options) as Renderer;
+  console.log('createRenderer', renderer);
   sendEventNotice(renderer);
   return renderer;
 };
