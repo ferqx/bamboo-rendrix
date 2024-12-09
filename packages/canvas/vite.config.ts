@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), dts()],
   resolve: {
     alias: {
-      '@bamboo-code/renderer': path.resolve(__dirname, '../renderer/src/index.ts'),
+      '@bamboo-rendrix/renderer': path.resolve(__dirname, '../renderer/src/index.ts'),
     },
   },
   build: {
@@ -18,7 +18,7 @@ export default defineConfig({
       fileName: (format) => `bm-canvas.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'classnames', /@bamboo-code\/*/],
+      external: ['react', 'react-dom', 'classnames', /@bamboo-rendrix\/*/],
       output: {
         globals: {
           react: 'React',

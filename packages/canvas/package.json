@@ -1,5 +1,5 @@
 {
-  "name": "@bamboo-code/canvas",
+  "name": "@bamboo-rendrix/canvas",
   "version": "0.0.2",
   "type": "module",
   "files": [
@@ -28,9 +28,9 @@
     "classnames": "^2.5.1"
   },
   "devDependencies": {
-    "@bamboo-code/components": "workspace:^",
-    "@bamboo-code/types": "workspace:^",
-    "@bamboo-code/renderer": "workspace:^",
+    "@bamboo-rendrix/components": "workspace:^",
+    "@bamboo-rendrix/types": "workspace:^",
+    "@bamboo-rendrix/renderer": "workspace:^",
     "classnames": "^2.5.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"

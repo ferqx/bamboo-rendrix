@@ -1,5 +1,5 @@
-import { CanvasComponent } from '@bamboo-code/canvas';
-import { TooltipProvider } from '@bamboo-code/components';
+import { CanvasComponent } from '@bamboo-rendrix/canvas';
+import { TooltipProvider } from '@bamboo-rendrix/components';
 import { LayoutComponent } from '../layout';
 import type { Designer } from '@/core';
 

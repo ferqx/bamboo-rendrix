@@ -1,5 +1,5 @@
 {
-  "name": "bamboo",
+  "name": "bamboo-rendrix",
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm --filter ./play run dev",

@@ -1,4 +1,4 @@
-import type { RenderNode } from '@bamboo-code/renderer';
+import type { RenderNode } from '@bamboo-rendrix/renderer';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 

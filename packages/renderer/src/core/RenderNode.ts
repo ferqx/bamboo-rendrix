@@ -1,5 +1,5 @@
 import { v1 as uuid } from 'uuid';
-import { type RenderSchema } from '@bamboo-code/types';
+import { type RenderSchema } from '@bamboo-rendrix/types';
 import type { Renderer } from './Renderer';
 import type { PropertyChange } from './NodeChange';
 import { ChangeType, NodeChangeEvent } from './NodeChange';

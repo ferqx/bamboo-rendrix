@@ -1,4 +1,4 @@
-import type { AssetSchema } from '@bamboo-code/types';
+import type { AssetSchema } from '@bamboo-rendrix/types';
 import type { MaterialMange } from './Material';
 
 /**

@@ -1,4 +1,4 @@
-import { cn } from '@bamboo-code/components';
+import { cn } from '@bamboo-rendrix/components';
 import React from 'react';
 
 export const Page = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(

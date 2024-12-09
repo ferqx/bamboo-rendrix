@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import type { Renderer, DRAG_DATA } from '@bamboo-code/renderer';
+import type { Renderer, DRAG_DATA } from '@bamboo-rendrix/renderer';
 
 declare module '*.svg';
 declare module '*.png';
