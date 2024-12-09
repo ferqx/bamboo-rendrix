@@ -113,11 +113,11 @@ export function useTool(options?: CanvasToolOptions) {
       }
 
       // 父组件schema 定义了子 schema 后，通常只允许添加该协议组件
-      if (targetNode.parent?.material?.childSchema?.find((item) => item.componentName === targetNode?.componentName)) {
-        e.dataTransfer!.dropEffect = 'none';
-        clearState();
-        return;
-      }
+      // if (targetNode.parent?.material?.childSchema?.find((item) => item.componentName === targetNode?.componentName)) {
+      //   e.dataTransfer!.dropEffect = 'none';
+      //   clearState();
+      //   return;
+      // }
 
       // 如果目标节点是当前节点的子节点，不允许进行拖拽交互
       if (dragElement && isChildByElement(dragElement, targetElement)) {
