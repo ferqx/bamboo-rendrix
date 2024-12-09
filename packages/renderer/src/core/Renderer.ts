@@ -98,11 +98,7 @@ export class Renderer {
   public set assets(value: AssetSchema[]) {
     this._assets = value;
     // 解构 - 返回物料数据
-    this.materials = value
-      .map((item) => item.components)
-      .flat()
-      .map((item) => [item, ...(item.childSchema || [])])
-      .flat();
+    this.materials = value.map((item) => item.components).flat();
   }
 
   /**
