@@ -1,4 +1,4 @@
-import type { MaterialSchema } from '@bamboo-code/types';
+import type { MaterialSchema } from '@bamboo-rendrix/types';
 
 /**
  * 物料类 - 管理物料组件的信息

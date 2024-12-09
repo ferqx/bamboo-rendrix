@@ -1,4 +1,4 @@
-import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo-code/types';
+import type { AssetSchema, MaterialSchema, RenderSchema } from '@bamboo-rendrix/types';
 import { RenderNode } from './RenderNode';
 import { ResourceManager } from './ResourceManager';
 import { ChangeType, NodeChangeEvent } from './NodeChange';

@@ -10,8 +10,8 @@ export default defineConfig({
   plugins: [react(), dts()],
   resolve: {
     alias: {
-      '@bamboo-code/canvas': path.resolve(__dirname, '../canvas/src/index.ts'),
-      '@bamboo-code/renderer': path.resolve(__dirname, '../renderer/src/index.ts'),
+      '@bamboo-rendrix/canvas': path.resolve(__dirname, '../canvas/src/index.ts'),
+      '@bamboo-rendrix/renderer': path.resolve(__dirname, '../renderer/src/index.ts'),
     },
   },
   build: {

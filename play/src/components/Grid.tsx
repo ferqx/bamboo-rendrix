@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@bamboo-code/components';
+import { cn } from '@bamboo-rendrix/components';
 
 export const Row = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
   ({ className, ...props }, ref) => {

@@ -1,5 +1,5 @@
 {
-  "name": "@bamboo-code/renderer",
+  "name": "@bamboo-rendrix/renderer",
   "version": "0.0.2",
   "type": "module",
   "files": [
@@ -26,7 +26,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@bamboo-code/types": "workspace:^",
+    "@bamboo-rendrix/types": "workspace:^",
     "lodash-es": "^4.17.21"
   },
   "dependencies": {

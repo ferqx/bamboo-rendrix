@@ -1,4 +1,4 @@
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo-code/components';
+import { Button, Tooltip, TooltipContent, TooltipTrigger } from '@bamboo-rendrix/components';
 import { Triangle, X } from 'lucide-react';
 import classNames from 'classnames';
 import type { Layout } from '../core';

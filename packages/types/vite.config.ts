@@ -22,7 +22,7 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo-code/components': 'BmComponents',
+          '@bamboo-rendrix/components': 'BmComponents',
         },
       },
     },

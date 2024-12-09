@@ -1,6 +1,6 @@
-import type { RenderSchema } from '@bamboo-code/types';
-import type { Renderer } from '@bamboo-code/renderer';
-import { ChangeType, DRAG_DATA, RenderNode } from '@bamboo-code/renderer';
+import type { RenderSchema } from '@bamboo-rendrix/types';
+import type { Renderer } from '@bamboo-rendrix/renderer';
+import { ChangeType, DRAG_DATA, RenderNode } from '@bamboo-rendrix/renderer';
 import { usePlaceholderTool } from './usePlaceholderTool';
 import type { SelectorToolOptions } from './useSelectorTool';
 import { useSelectorTool } from './useSelectorTool';

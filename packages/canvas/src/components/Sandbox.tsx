@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { Renderer } from '@bamboo-code/renderer';
+import type { Renderer } from '@bamboo-rendrix/renderer';
 
 export interface SandboxProps {
   src: string;

@@ -17,12 +17,12 @@ export default defineConfig({
       fileName: (format) => `bm-renderer.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'uuid', /@bamboo-code\/*/],
+      external: ['react', 'react-dom', 'uuid', /@bamboo-rendrix\/*/],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@bamboo-code/components': 'BmComponents',
+          '@bamboo-rendrix/components': 'BmComponents',
         },
       },
     },

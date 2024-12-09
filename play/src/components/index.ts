@@ -1,6 +1,6 @@
 import * as Grid from './Grid';
-import type { AssetSchema } from '@bamboo-code/types';
-import type { Renderer } from '@bamboo-code/renderer';
+import type { AssetSchema } from '@bamboo-rendrix/types';
+import type { Renderer } from '@bamboo-rendrix/renderer';
 import { Page } from './Page';
 
 const assets: AssetSchema = {

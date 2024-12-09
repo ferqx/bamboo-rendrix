@@ -1,4 +1,4 @@
-import { DRAG_ITEM_DATA_ID } from '@bamboo-code/renderer';
+import { DRAG_ITEM_DATA_ID } from '@bamboo-rendrix/renderer';
 
 export function isChildByElement(curNode: HTMLElement, targetNode: HTMLElement) {
   let parent = targetNode.parentElement;

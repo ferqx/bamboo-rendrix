@@ -1,5 +1,5 @@
 {
-  "name": "@bamboo-code/designer",
+  "name": "@bamboo-rendrix/designer",
   "version": "0.0.2",
   "type": "module",
   "files": [
@@ -27,10 +27,10 @@
     "uuid": "^10.0.0"
   },
   "dependencies": {
-    "@bamboo-code/canvas": "workspace:^",
-    "@bamboo-code/components": "workspace:^",
-    "@bamboo-code/types": "workspace:^",
-    "@bamboo-code/renderer": "workspace:^",
+    "@bamboo-rendrix/canvas": "workspace:^",
+    "@bamboo-rendrix/components": "workspace:^",
+    "@bamboo-rendrix/types": "workspace:^",
+    "@bamboo-rendrix/renderer": "workspace:^",
     "classnames": "^2.5.1"
   },
   "publishConfig": {

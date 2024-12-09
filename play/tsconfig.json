@@ -31,16 +31,16 @@
       "@/*": [
         "src/*"
       ],
-      "@bamboo-code/designer": [
+      "@bamboo-rendrix/designer": [
         "../packages/designer/src/index.ts"
       ],
-      "@bamboo-code/canvas": [
+      "@bamboo-rendrix/canvas": [
         "../packages/canvas/src/index.ts"
       ],
-      "@bamboo-code/renderer": [
+      "@bamboo-rendrix/renderer": [
         "../packages/renderer/src/index.ts"
       ],
-      "@bamboo-code/types": [
+      "@bamboo-rendrix/types": [
         "../packages/types/src/index.ts"
       ],
     },

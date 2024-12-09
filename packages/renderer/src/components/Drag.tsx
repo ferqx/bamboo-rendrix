@@ -1,5 +1,5 @@
 import React from 'react';
-import type { RenderSchema } from '@bamboo-code/types';
+import type { RenderSchema } from '@bamboo-rendrix/types';
 import { DRAG_ITEM_DATA_ID, DRAG_ITEM_CLASS_NAME, DRAG_DATA } from '../constant';
 import { RenderNode } from '../core';
 
