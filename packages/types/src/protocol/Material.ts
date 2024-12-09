@@ -62,9 +62,4 @@ export interface MaterialSchema {
    * 子组件限制数
    */
   childLimit?: number;
-  /**
-   * 子组件协议，通常子组件不展示在组件列表当中，但是会渲染在画布当中并可以被交互
-   * 通常，子组件协议定义后，该组件下只能拖拽与子组件协议相关的组件
-   */
-  childSchema?: MaterialSchema[];
 }
