@@ -15,9 +15,7 @@ export interface CanvasToolOptions extends SelectorToolOptions {
 }
 
 /**
- * iframe外围的拖住工具处理逻辑
- * 装饰显示逻辑
- * @param iframeWindow 该windows指向iframe window
+ * 画布交互工具
  */
 export function useTool(options?: CanvasToolOptions) {
   let targetNode: RenderNode | undefined;
