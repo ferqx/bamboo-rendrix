@@ -39,17 +39,7 @@ export interface MaterialSchema {
    * 该字段是用于当一个组件要展示多种形态时需要的一个设置功能，
    * 如果不设置该字段，会默认取componentName、name、icon字段组合成RenderSchema
    */
-  snippets?: {
-    /**
-     * 中文名称
-     */
-    name: string;
-    icon?: string;
-    /**
-     * 渲染器识别的schema
-     */
-    schema: RenderSchema;
-  }[];
+  snippets?: Snippet[];
   /**
    * 允许拖入到哪些父组件当中
    */
@@ -62,4 +52,16 @@ export interface MaterialSchema {
    * 子组件限制数
    */
   childLimit?: number;
+}
+
+export interface Snippet {
+  /**
+   * 中文名称
+   */
+  name: string;
+  icon?: string;
+  /**
+   * 渲染器识别的schema
+   */
+  schema: RenderSchema;
 }
