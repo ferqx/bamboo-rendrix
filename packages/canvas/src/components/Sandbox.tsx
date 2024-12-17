@@ -21,7 +21,7 @@ export const Sandbox = ({ src, done }: SandboxProps) => {
     return () => {
       window.removeEventListener('renderDone', renderDone);
     };
-  }, []);
+  });
 
   return <iframe ref={iframeRef} src={src} className="bm-canvas-sandbox"></iframe>;
 };

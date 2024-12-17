@@ -5,7 +5,7 @@ import { usePlaceholderTool } from './usePlaceholderTool';
 import type { SelectorToolOptions } from './useSelectorTool';
 import { useSelectorTool } from './useSelectorTool';
 import { useHoverTool } from './useHoverTool';
-import { isChildByElement } from '../utils';
+import { isChildByElement, nearestNode, isEqualNode } from '../utils';
 
 export interface CanvasToolOptions extends SelectorToolOptions {
   /**
@@ -15,9 +15,7 @@ export interface CanvasToolOptions extends SelectorToolOptions {
 }
 
 /**
- * iframe外围的拖住工具处理逻辑
- * 装饰显示逻辑
- * @param iframeWindow 该windows指向iframe window
+ * 画布交互工具
  */
 export function useTool(options?: CanvasToolOptions) {
   let targetNode: RenderNode | undefined;
@@ -30,117 +28,153 @@ export function useTool(options?: CanvasToolOptions) {
   const placeholderTool = usePlaceholderTool();
   const selectorTool = useSelectorTool();
 
+  const miniHostWidth = 10;
+
   /**
    * 初始化事件
    */
   const initEvent = (iframeWindow: Window, renderer: Renderer) => {
     _iframeWindow = iframeWindow;
-    // 监听节点移动
-    iframeWindow.addEventListener('dragover', (e) => {
-      e.preventDefault();
 
+    console.log('initEvent');
+
+    /**
+     * 验证父节点是否合法
+     * @param parentNode 父节点
+     * @param dragNode 拖拽节点
+     * @returns 是否合法
+     */
+    const isValidParent = (parentNode: RenderNode, dragNode: RenderNode) => {
+      return (
+        (dragNode.allowToParents && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
+        (parentNode.allowChildren && !parentNode.allowChildren?.includes(dragNode.componentName))
+      );
+    };
+
+    /**
+     * 判断是否应将占位符设置到中心位置
+     * @param targetNode 目标节点
+     * @returns 是否应设置到中心位置
+     */
+    const shouldSetCenterPlaceholder = (targetNode: RenderNode) => {
+      return targetNode?.isContainer && targetNode.children.length === 0;
+    };
+
+    /**
+     * 判断是否应将占位符设置到底部位置
+     * @param targetNode 目标节点
+     * @returns 是否应设置到底部位置
+     */
+    const shouldSetBottomPlaceholder = (targetNode: RenderNode) => {
+      return targetNode?.isContainer && targetNode.children.length > 0;
+    };
+
+    /**
+     * 设置占位符位置
+     * @param e 拖拽事件
+     * @param targetElement 目标元素
+     */
+    const setPlaceholder = (e: DragEvent, targetElement: HTMLElement) => {
+      const { left, right, top, bottom, height, width } = targetElement.getBoundingClientRect();
+      const x = e.clientX;
+      const y = e.clientY;
+
+      const xHostWidth = width / 24 < miniHostWidth ? miniHostWidth : width / 24;
+
+      // 判断移动方向, 判断左、右时可能还需要更为精准的判断的逻辑
+      if (x >= left && x <= left + xHostWidth) {
+        placeholderTool.setTargetPlaceholder(targetElement, 'left');
+      } else if (x <= right && x >= right - xHostWidth) {
+        placeholderTool.setTargetPlaceholder(targetElement, 'right');
+      } else if (y >= top && y <= top + height / 4) {
+        placeholderTool.setTargetPlaceholder(targetElement, 'top');
+      } else if (y <= bottom && y >= bottom - height / 4) {
+        placeholderTool.setTargetPlaceholder(targetElement, 'bottom');
+      } else {
+        placeholderTool.clearPlaceholder();
+        e.dataTransfer!.dropEffect = 'none';
+      }
+    };
+
+    const handleDragOver = (e: DragEvent, renderer: Renderer) => {
+      e.preventDefault();
       isDragIng = true;
 
-      // 1. 找到当前拖拽的节点
-      // 2. 找到目标节点-之前还是之后
-      // 3. 设置占位符 - 占位符的宽度与目标节点的宽度一致
+      // 获取目标元素
       const targetElement = renderer.getElement(e.target as HTMLElement);
+      if (!targetElement) return clearState();
 
-      if (!targetElement) {
-        clearState();
-        return;
-      }
-
+      // 获取目标节点
       targetNode = renderer.getNodeByElement(targetElement);
+      if (!targetNode) return;
 
-      if (!targetNode) {
-        return;
-      }
-
+      // 判断是否为复制操作
       const isCopy = e.dataTransfer?.effectAllowed === 'copy';
-
       const json = isCopy ? window[DRAG_DATA] : iframeWindow[DRAG_DATA];
+      if (!json) return;
 
-      if (!json) {
-        return;
+      // 解析拖拽数据
+      const dragData = JSON.parse(json) as RenderSchema;
+      const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
+      const dragNode = isCopy ? renderer.createNode(dragData, parentNode) : renderer.getNodeById(dragData.id!)!;
+      const dragElement = dragNode?.el;
+
+      // 验证父节点是否合法
+      if (!parentNode) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
       }
 
-      const dragData = JSON.parse(json) as RenderSchema;
+      // 检查是否为同一个节点
+      if (isEqualNode(dragNode, targetNode)) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
 
-      const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
+      // 检查拖拽元素是否为目标元素的子元素
+      if (dragElement && isChildByElement(dragElement, targetElement)) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
 
-      const dragNode = isCopy ? new RenderNode(dragData, parentNode) : renderer.getNodeById(dragData.id!);
-
-      const dragElement: HTMLElement | undefined = dragNode?.el as HTMLElement;
-
-      const { x, y } = e;
-
-      // 判断节点是否可以拖入到目标节点之中
       if (
-        parentNode &&
-        dragNode?.allowToParents?.length &&
-        !dragNode?.allowToParents.includes(parentNode.componentName)
+        (dragNode.allowToParents.length > 0 && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
+        (parentNode.allowChildren.length > 0 && !parentNode.allowChildren?.includes(dragNode.componentName))
       ) {
         e.dataTransfer!.dropEffect = 'none';
-        clearState();
-        return;
+        return clearState();
       }
 
       // 如果父节点存在子节点的数量限制
-      if (parentNode && parentNode.children.length >= parentNode.childLimit) {
+      if (parentNode.childLimit && parentNode.children.length >= parentNode.childLimit) {
         e.dataTransfer!.dropEffect = 'none';
-        clearState();
-        return;
+        return clearState();
       }
 
-      // 目标节点如果是容器
-      if (targetNode?.isContainer && targetNode.children.length === 0) {
+      // 设置占位符到中心位置
+      if (shouldSetCenterPlaceholder(targetNode)) {
         placeholderTool.setTargetPlaceholder(targetElement, 'center');
         return;
       }
 
-      // 如果目标节点是容器，并且存在子节点，表明拖拽过程中移动到了容器的空白区域
-      if (targetNode?.isContainer && targetNode.children.length > 0) {
-        targetNode = targetNode.children[targetNode.children.length - 1] as RenderNode;
-        targetNode.el && placeholderTool.setTargetPlaceholder(targetNode.el, 'bottom');
+      // 设置占位符到底部位置
+      if (shouldSetBottomPlaceholder(targetNode)) {
+        const y = e.clientY;
+        targetNode = nearestNode(y, targetNode.children);
+        if (targetNode && !isEqualNode(dragNode, targetNode)) {
+          targetNode.el && placeholderTool.setTargetPlaceholder(targetNode.el, 'bottom');
+        } else {
+          e.dataTransfer!.dropEffect = 'none';
+          clearState();
+        }
         return;
       }
 
-      // 如果是根节点，不允许节点在拖拽时展示placeholderTool占位
-      if (!targetNode.parent) {
-        clearState();
-        return;
-      }
+      // 设置占位符位置
+      setPlaceholder(e, targetElement);
+    };
 
-      // 父组件schema 定义了子 schema 后，通常只允许添加该协议组件
-      // if (targetNode.parent?.material?.childSchema?.find((item) => item.componentName === targetNode?.componentName)) {
-      //   e.dataTransfer!.dropEffect = 'none';
-      //   clearState();
-      //   return;
-      // }
-
-      // 如果目标节点是当前节点的子节点，不允许进行拖拽交互
-      if (dragElement && isChildByElement(dragElement, targetElement)) {
-        e.dataTransfer!.dropEffect = 'none';
-        clearState();
-        return;
-      }
-
-      const { left, right, top, bottom, height, width } = targetElement.getBoundingClientRect();
-
-      // 判断移动方向, 判断左、右时可能还需要更为精准的判断的逻辑
-      if (x > left && x < left + width / 24) {
-        placeholderTool.setTargetPlaceholder(targetElement, 'left');
-      } else if (x < right && x > right - width / 24) {
-        placeholderTool.setTargetPlaceholder(targetElement, 'right');
-      } else if (y > top && y < top + height / 2) {
-        placeholderTool.setTargetPlaceholder(targetElement, 'top');
-      } else if (y < bottom && y > bottom - height / 2) {
-        placeholderTool.setTargetPlaceholder(targetElement, 'bottom');
-      }
-    });
-    // 拖拽放下
-    iframeWindow.addEventListener('drop', (e) => {
+    const handleDrop = (e: DragEvent, renderer: Renderer) => {
       e.stopPropagation();
 
       isDragIng = false;
@@ -151,16 +185,12 @@ export function useTool(options?: CanvasToolOptions) {
         return;
       }
 
-      // 如果存在子节点的数量限制，不允许节点在拖拽时能够通过placeholderTool占位
       if (targetNode.parent?.childLimit && targetNode.parent.children.length + 1 > targetNode.parent.childLimit) {
         return;
       }
 
       const data: RenderSchema = JSON.parse(dragData);
-
-      // 未来的父节点
       const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
-
       const dragNode =
         e.dataTransfer?.effectAllowed === 'move'
           ? renderer.getNodeById(data.id!)
@@ -170,11 +200,9 @@ export function useTool(options?: CanvasToolOptions) {
         return;
       }
 
-      // 如果是move类型，表明拖拽中的节点是画布中的节点
       if (e.dataTransfer?.effectAllowed === 'move') {
         renderer.moveNode(dragNode!, targetNode!, placeholderTool.pops);
       } else if (e.dataTransfer?.effectAllowed === 'copy') {
-        // 从外部拖入到画布中，插入新的节点
         if (placeholderTool.pops === 1) {
           targetNode?.insertBefore(dragNode);
         } else if (placeholderTool.pops === -1) {
@@ -183,9 +211,13 @@ export function useTool(options?: CanvasToolOptions) {
           targetNode?.appendChild(dragNode);
         }
       }
+
       clearDragData();
       placeholderTool.clearPlaceholder();
-    });
+    };
+
+    iframeWindow.addEventListener('dragover', (e) => handleDragOver(e, renderer));
+    iframeWindow.addEventListener('drop', (e) => handleDrop(e, renderer));
     // 拖拽进入
     iframeWindow.addEventListener('dragenter', (e) => e.preventDefault());
     // 拖拽结束

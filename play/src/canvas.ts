@@ -1,7 +1,8 @@
 import { createRenderer } from '@bamboo-rendrix/designer';
 import type { RenderSchema } from '@bamboo-rendrix/types';
 import { Button, Input, InputNumber } from 'antd';
-import { install } from './components';
+import { install } from './components/built-in';
+import shadcn from './components/shadcn';
 import './canvas.css';
 
 const schema: RenderSchema[] = [
@@ -58,5 +59,6 @@ renderer.componentManager.registerComponent('input', Input);
 renderer.componentManager.registerComponent('inputNumber', InputNumber);
 
 install(renderer);
+shadcn.install(renderer);
 
 renderer.mount(document.getElementById('app')!);

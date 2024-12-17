@@ -13,6 +13,7 @@ export interface DragWrappedComponentProps {
   data: RenderNode | RenderSchema;
   draggable: boolean;
   onDragStart: (e: React.DragEvent) => void;
+  children?: React.ReactNode;
 }
 
 /**
