@@ -71,11 +71,11 @@ export function usePlaceholderTool() {
     get state() {
       return stateRef.current;
     },
-    setPlaceholder,
-    setTargetPlaceholder,
-    clearPlaceholder,
     get pops() {
       return _pops;
     },
+    setPlaceholder,
+    setTargetPlaceholder,
+    clearPlaceholder,
   };
 }

@@ -5,7 +5,7 @@ import { usePlaceholderTool } from './usePlaceholderTool';
 import type { SelectorToolOptions } from './useSelectorTool';
 import { useSelectorTool } from './useSelectorTool';
 import { useHoverTool } from './useHoverTool';
-import { isChildByElement } from '../utils';
+import { isChildByElement, nearestNode, isEqualNode } from '../utils';
 
 export interface CanvasToolOptions extends SelectorToolOptions {
   /**
@@ -28,6 +28,8 @@ export function useTool(options?: CanvasToolOptions) {
   const placeholderTool = usePlaceholderTool();
   const selectorTool = useSelectorTool();
 
+  const miniHostWidth = 10;
+
   /**
    * 初始化事件
    */
@@ -44,7 +46,7 @@ export function useTool(options?: CanvasToolOptions) {
      */
     const isValidParent = (parentNode: RenderNode, dragNode: RenderNode) => {
       return (
-        (dragNode.allowToParents && !dragNode?.allowToParents.includes(parentNode.componentName)) ||
+        (dragNode.allowToParents && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
         (parentNode.allowChildren && !parentNode.allowChildren?.includes(dragNode.componentName))
       );
     };
@@ -77,13 +79,16 @@ export function useTool(options?: CanvasToolOptions) {
       const x = e.clientX;
       const y = e.clientY;
 
-      if (x >= left && x <= left + width / 24) {
+      const xHostWidth = width / 24 < miniHostWidth ? miniHostWidth : width / 24;
+
+      // 判断移动方向, 判断左、右时可能还需要更为精准的判断的逻辑
+      if (x >= left && x <= left + xHostWidth) {
         placeholderTool.setTargetPlaceholder(targetElement, 'left');
-      } else if (x <= right && x >= right - width / 24) {
+      } else if (x <= right && x >= right - xHostWidth) {
         placeholderTool.setTargetPlaceholder(targetElement, 'right');
-      } else if (y >= top && y <= top + height / 2) {
+      } else if (y >= top && y <= top + height / 4) {
         placeholderTool.setTargetPlaceholder(targetElement, 'top');
-      } else if (y <= bottom && y >= bottom - height / 2) {
+      } else if (y <= bottom && y >= bottom - height / 4) {
         placeholderTool.setTargetPlaceholder(targetElement, 'bottom');
       } else {
         placeholderTool.clearPlaceholder();
@@ -111,11 +116,40 @@ export function useTool(options?: CanvasToolOptions) {
       // 解析拖拽数据
       const dragData = JSON.parse(json) as RenderSchema;
       const parentNode = targetNode.isContainer ? targetNode : targetNode.parent;
-      const dragNode = isCopy ? new RenderNode(dragData, parentNode) : renderer.getNodeById(dragData.id!);
-      const dragElement: HTMLElement | undefined = dragNode?.el as HTMLElement;
+      const dragNode = isCopy ? renderer.createNode(dragData, parentNode) : renderer.getNodeById(dragData.id!)!;
+      const dragElement = dragNode?.el;
 
       // 验证父节点是否合法
-      if (!parentNode || !dragNode || !isValidParent(parentNode, dragNode)) return clearState();
+      if (!parentNode) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
+
+      // 检查是否为同一个节点
+      if (isEqualNode(dragNode, targetNode)) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
+
+      // 检查拖拽元素是否为目标元素的子元素
+      if (dragElement && isChildByElement(dragElement, targetElement)) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
+
+      if (
+        (dragNode.allowToParents.length > 0 && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
+        (parentNode.allowChildren.length > 0 && !parentNode.allowChildren?.includes(dragNode.componentName))
+      ) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
+
+      // 如果父节点存在子节点的数量限制
+      if (parentNode.childLimit && parentNode.children.length >= parentNode.childLimit) {
+        e.dataTransfer!.dropEffect = 'none';
+        return clearState();
+      }
 
       // 设置占位符到中心位置
       if (shouldSetCenterPlaceholder(targetNode)) {
@@ -125,18 +159,15 @@ export function useTool(options?: CanvasToolOptions) {
 
       // 设置占位符到底部位置
       if (shouldSetBottomPlaceholder(targetNode)) {
-        targetNode = targetNode.children[targetNode.children.length - 1] as RenderNode;
-        targetNode.el && placeholderTool.setTargetPlaceholder(targetNode.el, 'bottom');
+        const y = e.clientY;
+        targetNode = nearestNode(y, targetNode.children);
+        if (targetNode && !isEqualNode(dragNode, targetNode)) {
+          targetNode.el && placeholderTool.setTargetPlaceholder(targetNode.el, 'bottom');
+        } else {
+          e.dataTransfer!.dropEffect = 'none';
+          clearState();
+        }
         return;
-      }
-
-      // 如果没有父节点，清除状态
-      if (!targetNode.parent) return clearState();
-
-      // 检查拖拽元素是否为目标元素的子元素
-      if (dragElement && isChildByElement(dragElement, targetElement)) {
-        e.dataTransfer!.dropEffect = 'none';
-        return clearState();
       }
 
       // 设置占位符位置

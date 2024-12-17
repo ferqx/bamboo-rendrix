@@ -18,6 +18,7 @@ const assets: AssetSchema = {
     {
       name: '栅格行',
       componentName: 'Row',
+      allowChildren: ['Col'],
       snippets: [
         {
           name: '单栏布局',
@@ -25,6 +26,9 @@ const assets: AssetSchema = {
             componentName: 'Row',
             props: {
               gutter: 0,
+              style: {
+                marginBottom: '20px',
+              },
             },
             children: [
               {
@@ -43,6 +47,9 @@ const assets: AssetSchema = {
             componentName: 'Row',
             props: {
               gutter: 0,
+              style: {
+                marginBottom: '20px',
+              },
             },
             children: [
               {

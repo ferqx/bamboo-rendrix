@@ -114,6 +114,10 @@ export class Renderer {
     this.createRootNode(this.options.schema);
   }
 
+  createNode(schema: RenderSchema, parent?: RenderNode) {
+    return new RenderNode(schema, parent);
+  }
+
   createRootNode(schema: RenderSchema[]) {
     this.nodes = schema.map((item) => {
       const node = new RenderNode(item);
