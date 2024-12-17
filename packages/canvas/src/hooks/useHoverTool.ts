@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export interface HoverToolState {
   x: number;
@@ -19,6 +19,10 @@ export function useHoverTool() {
     height: 0,
     visible: false,
   });
+
+  // 保存state
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const clearHoverTool = () => {
     setState((pervState) => ({ ...pervState, visible: false, target: undefined }));
@@ -55,5 +59,11 @@ export function useHoverTool() {
     setState((pervState) => ({ ...pervState, x: _x, y: _y, width, height, visible: true }));
   };
 
-  return { state, updateHoverTool, clearHoverTool };
+  return {
+    get state() {
+      return stateRef.current;
+    },
+    updateHoverTool,
+    clearHoverTool,
+  };
 }

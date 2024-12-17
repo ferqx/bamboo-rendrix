@@ -143,5 +143,14 @@ export function useSelectorTool(options?: SelectorToolOptions) {
     mutationObserver?.disconnect();
   };
 
-  return { state, options, setSelectorTool, watchElementResizeObserve, updateSelectorTool, clearSelectorTool };
+  return {
+    get state() {
+      return stateRef.current;
+    },
+    options,
+    setSelectorTool,
+    watchElementResizeObserve,
+    updateSelectorTool,
+    clearSelectorTool,
+  };
 }

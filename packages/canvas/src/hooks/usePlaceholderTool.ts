@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export type Position = 'left' | 'right' | 'top' | 'bottom' | 'center';
 
@@ -24,6 +24,10 @@ export function usePlaceholderTool() {
     height: 0,
     visible: false,
   });
+
+  // 保存state
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const defaultPx = 4;
 
@@ -64,7 +68,9 @@ export function usePlaceholderTool() {
   };
 
   return {
-    state,
+    get state() {
+      return stateRef.current;
+    },
     setPlaceholder,
     setTargetPlaceholder,
     clearPlaceholder,
