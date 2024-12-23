@@ -46,8 +46,8 @@ export function useTool(options?: CanvasToolOptions) {
      */
     const isValidParent = (parentNode: RenderNode, dragNode: RenderNode) => {
       return (
-        (dragNode.allowToParents && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
-        (parentNode.allowChildren && !parentNode.allowChildren?.includes(dragNode.componentName))
+        (dragNode.allowToParents.length > 0 && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
+        (parentNode.allowChildren.length > 0 && !parentNode.allowChildren?.includes(dragNode.componentName))
       );
     };
 
@@ -137,10 +137,8 @@ export function useTool(options?: CanvasToolOptions) {
         return clearState();
       }
 
-      if (
-        (dragNode.allowToParents.length > 0 && !dragNode.allowToParents?.includes(parentNode.componentName)) ||
-        (parentNode.allowChildren.length > 0 && !parentNode.allowChildren?.includes(dragNode.componentName))
-      ) {
+      // 检查父节点是否合法
+      if (isValidParent(parentNode, dragNode)) {
         e.dataTransfer!.dropEffect = 'none';
         return clearState();
       }

@@ -5,7 +5,7 @@ import type { PropertyChange } from './NodeChange';
 import { ChangeType, NodeChangeEvent } from './NodeChange';
 
 /**
- * 渲染节点
+ * 渲染器节点
  */
 export class RenderNode {
   id: string | number;
