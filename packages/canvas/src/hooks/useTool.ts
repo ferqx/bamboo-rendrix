@@ -274,7 +274,7 @@ export function useTool(options?: CanvasToolOptions) {
         }
       });
     });
-    iframeWindow.addEventListener('resize', selectorTool.updateSelectorTool);
+    iframeWindow.addEventListener('resize', () => selectorTool.updateSelectorTool());
     // 监听外部的组件拖动，并清除画布中的状态
     window.addEventListener('dragenter', clearState);
     window.addEventListener('mouseover', clearState);
@@ -334,10 +334,6 @@ export function useTool(options?: CanvasToolOptions) {
     (targetNode.el as HTMLElement)?.querySelector('.drag-hover')?.classList.remove('drag-hover');
   };
 
-  const onDelete = () => {
-    selectorTool.state.selectedNode?.remove();
-  };
-
   const destroy = () => {
     window.removeEventListener('dragenter', clearState);
     window.removeEventListener('mouseover', clearState);
@@ -345,7 +341,6 @@ export function useTool(options?: CanvasToolOptions) {
 
   return {
     initEvent,
-    onDelete,
     clearState,
     destroy,
     isDragIng,
