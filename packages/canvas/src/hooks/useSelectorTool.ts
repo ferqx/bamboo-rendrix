@@ -122,31 +122,11 @@ export function useSelectorTool(options?: SelectorToolOptions) {
       return;
     }
 
-    const rect = targetElement.getBoundingClientRect();
-
-    const { x, y, height } = rect;
-
-    let { width } = rect;
-
-    const _x = x < 0 ? 0 : x;
-
-    const _y = y > targetElement.ownerDocument.body.offsetWidth ? targetElement.ownerDocument.body.offsetWidth : y;
-
-    if (x < 0) {
-      width = x < 0 ? width + x : width;
-    } else if (x + width > targetElement.ownerDocument.body.offsetWidth) {
-      width =
-        x + width > targetElement.ownerDocument.body.offsetWidth
-          ? targetElement.ownerDocument.body.offsetWidth - x
-          : width;
-    }
+    const rect = getElementRect(targetElement);
 
     setState((prevState) => ({
       ...prevState,
-      x: _x,
-      y: _y,
-      width,
-      height,
+      ...rect,
       visible: true,
     }));
   };
