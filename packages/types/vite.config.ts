@@ -13,18 +13,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      name: 'bmProtocol',
-      fileName: (format) => `bm-protocol.${format}.js`,
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          '@bamboo-rendrix/components': 'BmComponents',
-        },
-      },
+      name: 'bmTypes',
+      fileName: (format) => `bm-types.${format}.js`,
     },
   },
 });
