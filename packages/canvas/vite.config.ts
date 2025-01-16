@@ -15,6 +15,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'bmCanvas',
+      cssFileName: 'style',
       fileName: (format) => `bm-canvas.${format}.js`,
     },
     rollupOptions: {

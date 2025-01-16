@@ -20,6 +20,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'bmDesigner',
+      cssFileName: 'style',
       fileName: (format) => `bm-designer.${format}.js`,
     },
     rollupOptions: {

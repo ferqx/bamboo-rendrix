@@ -15,6 +15,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'bmComponents',
+      cssFileName: 'style',
       fileName: (format) => `bm-components.${format}.js`,
     },
     rollupOptions: {

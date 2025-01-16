@@ -63,24 +63,57 @@ export function useSelectorTool(options?: SelectorToolOptions) {
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  useEffect(() => {
-    updateSelectorTool();
-    watchElementResizeObserve();
-  }, [state.selectedNode]);
-
   let mutationObserver: MutationObserver;
 
   const setSelectorTool = (node: RenderNode) => {
-    mutationObserver?.disconnect();
-    // 重新设置
-    setState((prevState) => ({
-      ...prevState,
+    if (!node.el) {
+      return;
+    }
+    const rect = getElementRect(node.el);
+    setState({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+      visible: true,
+      settingVisible: false,
       selectedNode: node,
-    }));
+    });
+    watchElementResizeObserve(node.el);
   };
 
   /**
-   * 更新选择工具坐标
+   * 获取元素的坐标和宽高
+   */
+  const getElementRect = (el: HTMLElement) => {
+    const rect = el.getBoundingClientRect();
+
+    const { x, y, height } = rect;
+
+    let { width } = rect;
+
+    const _x = x < 0 ? 0 : x;
+
+    const _y = y > el.ownerDocument.body.offsetWidth ? el.ownerDocument.body.offsetWidth : y;
+
+    if (x < 0) {
+      width = x < 0 ? width + x : width;
+    } else if (x + width > el.ownerDocument.body.offsetWidth) {
+      width = x + width > el.ownerDocument.body.offsetWidth ? el.ownerDocument.body.offsetWidth - x : width;
+    }
+
+    return {
+      x: _x,
+      y: _y,
+      width,
+      height,
+    };
+  };
+
+  /**
+   * 更新选择工具
+   * @param node
+   * @returns
    */
   const updateSelectorTool = () => {
     const targetElement = stateRef.current.selectedNode?.el as HTMLElement;
@@ -89,31 +122,11 @@ export function useSelectorTool(options?: SelectorToolOptions) {
       return;
     }
 
-    const rect = targetElement.getBoundingClientRect();
-
-    const { x, y, height } = rect;
-
-    let { width } = rect;
-
-    const _x = x < 0 ? 0 : x;
-
-    const _y = y > targetElement.ownerDocument.body.offsetWidth ? targetElement.ownerDocument.body.offsetWidth : y;
-
-    if (x < 0) {
-      width = x < 0 ? width + x : width;
-    } else if (x + width > targetElement.ownerDocument.body.offsetWidth) {
-      width =
-        x + width > targetElement.ownerDocument.body.offsetWidth
-          ? targetElement.ownerDocument.body.offsetWidth - x
-          : width;
-    }
+    const rect = getElementRect(targetElement);
 
     setState((prevState) => ({
       ...prevState,
-      x: _x,
-      y: _y,
-      width,
-      height,
+      ...rect,
       visible: true,
     }));
   };
@@ -121,13 +134,10 @@ export function useSelectorTool(options?: SelectorToolOptions) {
   /**
    * 监听所选择的元素大小变化
    */
-  const watchElementResizeObserve = () => {
-    const targetElement = stateRef.current.selectedNode?.el;
-    if (!targetElement) {
-      return;
-    }
-    mutationObserver = new MutationObserver(updateSelectorTool);
-    mutationObserver.observe(targetElement, { attributes: true, subtree: true, childList: true });
+  const watchElementResizeObserve = (el: HTMLElement) => {
+    mutationObserver?.disconnect();
+    mutationObserver = new MutationObserver(() => updateSelectorTool());
+    mutationObserver.observe(el, { attributes: true, subtree: true, childList: true });
   };
 
   const clearSelectorTool = () => {
@@ -149,7 +159,6 @@ export function useSelectorTool(options?: SelectorToolOptions) {
     },
     options,
     setSelectorTool,
-    watchElementResizeObserve,
     updateSelectorTool,
     clearSelectorTool,
   };

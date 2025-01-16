@@ -14,6 +14,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'BmRenderer',
+      cssFileName: 'style',
       fileName: (format) => `bm-renderer.${format}.js`,
     },
     rollupOptions: {
